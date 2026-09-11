@@ -11,9 +11,9 @@
     --mint: #cfe8dd;
     --sun: #f6c867;
     --shadow: 0 28px 80px rgba(33, 38, 43, 0.14), 0 4px 18px rgba(33, 38, 43, 0.05);
-    --radius-xl: 28px;
-    --radius-lg: 18px;
-    --radius-md: 12px;
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 11px;
 }
 
 * {
@@ -54,28 +54,28 @@ a {
 .auth-page {
     display: grid;
     min-height: 100vh;
-    padding: 32px;
+    padding: 18px;
     place-items: center;
 }
 
 .auth-shell {
     display: grid;
-    width: min(1180px, 100%);
-    min-height: 720px;
+    width: min(880px, 100%);
+    min-height: 560px;
     overflow: hidden;
     border: 1px solid rgba(231, 228, 220, 0.85);
     border-radius: var(--radius-xl);
     background: var(--paper);
     box-shadow: var(--shadow);
-    grid-template-columns: minmax(390px, 0.92fr) minmax(470px, 1.08fr);
+    grid-template-columns: minmax(300px, 0.9fr) minmax(380px, 1.1fr);
 }
 
 .auth-showcase {
     position: relative;
     display: flex;
-    min-height: 720px;
+    min-height: 560px;
     overflow: hidden;
-    padding: 36px 42px 28px;
+    padding: 24px 28px 18px;
     color: #fffaf2;
     background: var(--accent);
     isolation: isolate;
@@ -147,7 +147,7 @@ a {
 
 .showcase-copy {
     width: min(360px, 100%);
-    margin-top: 92px;
+    margin-top: 44px;
 }
 
 .eyebrow {
@@ -169,7 +169,7 @@ a {
     margin: 0;
     color: #fffaf2;
     font-family: 'Space Grotesk', 'DM Sans', sans-serif;
-    font-size: clamp(38px, 4vw, 58px);
+    font-size: clamp(31px, 3.2vw, 42px);
     font-weight: 600;
     letter-spacing: -0.07em;
     line-height: 0.99;
@@ -179,22 +179,22 @@ a {
     max-width: 280px;
     margin: 22px 0 0;
     color: rgba(255, 250, 242, 0.78);
-    font-size: 15px;
+    font-size: 13px;
     line-height: 1.65;
 }
 
 .showcase-art {
     position: relative;
     width: 100%;
-    min-height: 245px;
+    min-height: 178px;
     margin-top: auto;
 }
 
 .art-sun {
     position: absolute;
-    width: 170px;
-    height: 170px;
-    right: 45px;
+    width: 126px;
+    height: 126px;
+    right: 31px;
     bottom: 7px;
     border-radius: 50%;
     background: var(--sun);
@@ -209,16 +209,16 @@ a {
 }
 
 .art-ring--outer {
-    width: 260px;
-    height: 115px;
+    width: 190px;
+    height: 84px;
     right: 0;
     bottom: 44px;
 }
 
 .art-ring--inner {
-    width: 215px;
-    height: 90px;
-    right: 21px;
+    width: 160px;
+    height: 68px;
+    right: 15px;
     bottom: 55px;
     border-color: rgba(23, 33, 43, 0.26);
 }
@@ -231,13 +231,13 @@ a {
 }
 
 .art-spark--one {
-    right: 253px;
-    bottom: 116px;
+    right: 184px;
+    bottom: 85px;
 }
 
 .art-spark--two {
-    right: 21px;
-    bottom: 187px;
+    right: 14px;
+    bottom: 137px;
     color: var(--sun);
     font-size: 15px;
 }
@@ -248,41 +248,41 @@ a {
     display: flex;
     align-items: center;
     width: max-content;
-    max-width: 220px;
-    padding: 9px 12px 9px 9px;
+    max-width: 175px;
+    padding: 7px 9px 7px 7px;
     gap: 8px;
     border: 1px solid rgba(23, 33, 43, 0.08);
     border-radius: 13px;
     color: var(--ink);
     background: rgba(255, 254, 250, 0.94);
     box-shadow: 0 12px 28px rgba(81, 43, 35, 0.16);
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 600;
     line-height: 1.25;
 }
 
 .message-card--top {
-    right: 64px;
-    bottom: 178px;
+    right: 42px;
+    bottom: 130px;
     transform: rotate(4deg);
 }
 
 .message-card--bottom {
-    right: 15px;
-    bottom: 55px;
-    padding-right: 9px;
-    padding-left: 12px;
+    right: 9px;
+    bottom: 37px;
+    padding-right: 7px;
+    padding-left: 9px;
     transform: rotate(-4deg);
 }
 
 .message-avatar {
     display: inline-grid;
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     flex: 0 0 auto;
     border-radius: 9px;
     color: var(--ink);
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
     place-items: center;
 }
@@ -303,10 +303,12 @@ a {
 .art-person {
     position: absolute;
     z-index: 1;
-    right: 154px;
+    right: 108px;
     bottom: 0;
     width: 122px;
     height: 188px;
+    transform: scale(0.75);
+    transform-origin: bottom right;
 }
 
 .art-person__hair,
@@ -407,19 +409,19 @@ a {
 }
 
 .auth-content {
-    width: min(390px, calc(100% - 64px));
-    padding: 56px 0;
+    width: min(320px, calc(100% - 44px));
+    padding: 30px 0;
 }
 
 .auth-heading {
-    margin-bottom: 34px;
+    margin-bottom: 21px;
 }
 
 .auth-heading h2 {
     margin: 0;
     color: var(--ink);
     font-family: 'Space Grotesk', 'DM Sans', sans-serif;
-    font-size: clamp(32px, 3vw, 42px);
+    font-size: clamp(28px, 3vw, 33px);
     font-weight: 600;
     letter-spacing: -0.065em;
     line-height: 1.04;
@@ -429,7 +431,7 @@ a {
     max-width: 310px;
     margin: 13px 0 0;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.6;
 }
 
@@ -470,13 +472,13 @@ a {
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
 }
 
 .field-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .field-group--split {
@@ -527,17 +529,17 @@ a {
 
 .input-icon {
     position: absolute;
-    left: 15px;
-    width: 18px;
-    height: 18px;
+    left: 14px;
+    width: 17px;
+    height: 17px;
     color: #a4abb2;
     pointer-events: none;
 }
 
 .input-wrap input {
     width: 100%;
-    min-height: 50px;
-    padding: 0 16px 0 46px;
+    min-height: 42px;
+    padding: 0 14px 0 42px;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     outline: none;
@@ -660,7 +662,7 @@ a {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: 52px;
+    min-height: 44px;
     margin-top: 4px;
     padding: 0 17px 0 20px;
     border: 0;
@@ -697,7 +699,7 @@ a {
 }
 
 .auth-legal {
-    margin: 21px 0 0;
+    margin: 14px 0 0;
     color: #a0a6ac;
     font-size: 10px;
     line-height: 1.5;
@@ -705,7 +707,7 @@ a {
 }
 
 .auth-switch {
-    margin: 30px 0 0;
+    margin: 19px 0 0;
     color: var(--muted);
     font-size: 12px;
     text-align: center;
@@ -728,32 +730,32 @@ a {
 
 @media (max-width: 940px) {
     .auth-page {
-        padding: 20px;
+        padding: 14px;
     }
 
     .auth-shell {
-        grid-template-columns: minmax(320px, 0.85fr) minmax(400px, 1.15fr);
+        grid-template-columns: minmax(280px, 0.85fr) minmax(360px, 1.15fr);
     }
 
     .auth-showcase {
-        padding-right: 30px;
-        padding-left: 30px;
+        padding-right: 22px;
+        padding-left: 22px;
     }
 
     .showcase-copy {
-        margin-top: 72px;
+        margin-top: 36px;
     }
 
     .showcase-copy h1 {
-        font-size: 42px;
+        font-size: 34px;
     }
 
     .art-person {
-        right: 95px;
+        right: 68px;
     }
 
     .message-card--top {
-        right: 30px;
+        right: 17px;
     }
 }
 
