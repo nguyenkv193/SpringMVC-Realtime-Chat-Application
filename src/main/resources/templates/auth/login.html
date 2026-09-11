@@ -1,51 +1,152 @@
 <!DOCTYPE html>
-<html
-        lang="vi"
-        xmlns:th="http://www.thymeleaf.org"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng Nhập | Spring ChatApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f26752">
+    <title>Sign in | Moji</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
-<body>
-    <form th:action="@{/login}" method="POST">
-        <input type="hidden"
-               th:name="${_csrf.parameterName}"
-               th:value="${_csrf.token}"
-        >
-        
-        <div>
-            <label for="email">Email: </label>
-            <input type="text"
-                   id="email"
-                   name="email"
-                   placeholder="Nhập email của bạn..."
-                   autocomplete="email"
-                   required>
-        </div>
-        <div>
-            <label for="password">Password: </label>
-            <input type="password"
-                   id="password"
-                   name="password"
-                   placeholder="Nhập password của bạn..."
-                   autocomplete="current-password"
-                   required>
+<body class="auth-page">
+<main class="auth-shell">
+    <section class="auth-showcase" aria-label="Moji introduction">
+        <a class="brand brand--showcase" th:href="@{/login}" aria-label="Moji home">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.5 9.5C8.5 7.84315 9.84315 6.5 11.5 6.5H20.5C22.1569 6.5 23.5 7.84315 23.5 9.5V16.5C23.5 18.1569 22.1569 19.5 20.5 19.5H15.25L11.5 23V19.5H11.5C9.84315 19.5 8.5 18.1569 8.5 16.5V9.5Z" fill="currentColor"/>
+                    <circle cx="13" cy="13" r="1.25" fill="#F26752"/>
+                    <circle cx="16" cy="13" r="1.25" fill="#F26752"/>
+                    <circle cx="19" cy="13" r="1.25" fill="#F26752"/>
+                </svg>
+            </span>
+            <span>moji</span>
+        </a>
+
+        <div class="showcase-copy">
+            <p class="eyebrow">A little closer, every day</p>
+            <h1>Good conversations start with a simple hello.</h1>
+            <p>Keep the people you care about close, wherever life takes you.</p>
         </div>
 
-        <div>
-            <input type="checkbox" id="terms">
-            <label for="terms">
-                Bằng việc đăng nhập hoặc tạo tài khoản, bạn xác nhận đã đọc, hiểu và đồng ý
-                tuân thủ
-                <a th:href="@{/terms}" target="_blank">Điều khoản sử dụng</a>
-                cùng
-                <a th:href="@{/privacy}" target="_blank">Chính sách quyền riêng tư</a>
-                của Realtime Chat.
-            </label>
+        <div class="showcase-art" aria-hidden="true">
+            <div class="art-sun"></div>
+            <div class="art-ring art-ring--outer"></div>
+            <div class="art-ring art-ring--inner"></div>
+            <div class="art-spark art-spark--one">✦</div>
+            <div class="art-spark art-spark--two">✦</div>
+
+            <div class="message-card message-card--top">
+                <span class="message-avatar message-avatar--mint">A</span>
+                <span>Hey, are you free today?</span>
+            </div>
+            <div class="message-card message-card--bottom">
+                <span>Absolutely! ✨</span>
+                <span class="message-avatar message-avatar--navy">M</span>
+            </div>
+            <div class="art-person">
+                <span class="art-person__hair"></span>
+                <span class="art-person__face"></span>
+                <span class="art-person__body"></span>
+            </div>
         </div>
-        
-        <button type="submit">Đăng nhập</button>
-    </form>
+
+        <div class="showcase-footer">
+            <span>Make space for what matters.</span>
+            <span class="showcase-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        </div>
+    </section>
+
+    <section class="auth-panel">
+        <div class="auth-content">
+            <a class="brand brand--mobile" th:href="@{/login}" aria-label="Moji home">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.5 9.5C8.5 7.84315 9.84315 6.5 11.5 6.5H20.5C22.1569 6.5 23.5 7.84315 23.5 9.5V16.5C23.5 18.1569 22.1569 19.5 20.5 19.5H15.25L11.5 23V19.5H11.5C9.84315 19.5 8.5 18.1569 8.5 16.5V9.5Z" fill="currentColor"/>
+                        <circle cx="13" cy="13" r="1.25" fill="#F26752"/>
+                        <circle cx="16" cy="13" r="1.25" fill="#F26752"/>
+                        <circle cx="19" cy="13" r="1.25" fill="#F26752"/>
+                    </svg>
+                </span>
+                <span>moji</span>
+            </a>
+
+            <div class="auth-heading">
+                <p class="eyebrow eyebrow--dark">Welcome back</p>
+                <h2>Sign in to your account</h2>
+                <p>Pick up the conversation right where you left off.</p>
+            </div>
+
+            <div class="auth-alert auth-alert--error" role="alert" th:if="${param.error}">
+                <span class="alert-icon" aria-hidden="true">!</span>
+                <span>That email or password doesn't look right. Please try again.</span>
+            </div>
+            <div class="auth-alert auth-alert--success" role="status" th:if="${param.logout}">
+                <span class="alert-icon" aria-hidden="true">✓</span>
+                <span>You have been signed out successfully.</span>
+            </div>
+            <div class="auth-alert auth-alert--success" role="status" th:if="${param.registered}">
+                <span class="alert-icon" aria-hidden="true">✓</span>
+                <span>Your account is ready. Sign in to continue.</span>
+            </div>
+
+            <form class="auth-form" th:action="@{/login}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                <div class="field-group">
+                    <label class="field-label" for="email">Email address</label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M4 6.75C4 5.7835 4.7835 5 5.75 5H18.25C19.2165 5 20 5.7835 20 6.75V17.25C20 18.2165 19.2165 19 18.25 19H5.75C4.7835 19 4 18.2165 4 17.25V6.75Z" stroke="currentColor" stroke-width="1.6"/>
+                            <path d="M5 6.5L12 12L19 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required autofocus>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label-row">
+                        <label class="field-label" for="password">Password</label>
+                        <a class="field-link" href="#password-help">Forgot password?</a>
+                    </div>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                            <path d="M8 10V7.75C8 5.54086 9.79086 4 12 4C14.2091 4 16 5.54086 16 7.75V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                            <circle cx="12" cy="15" r="1" fill="currentColor"/>
+                        </svg>
+                        <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+                        <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M3.5 12C5.2 8.8 8.1 7 12 7C15.9 7 18.8 8.8 20.5 12C18.8 15.2 15.9 17 12 17C8.1 17 5.2 15.2 3.5 12Z" stroke="currentColor" stroke-width="1.6"/>
+                                <circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <label class="check-row" for="remember-me">
+                    <input id="remember-me" type="checkbox" name="remember-me">
+                    <span class="checkmark" aria-hidden="true"></span>
+                    <span>Keep me signed in</span>
+                </label>
+
+                <button class="primary-button" type="submit">
+                    <span>Sign in</span>
+                    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M4 10H15M10.5 5.5L15 10L10.5 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+
+            <p class="auth-legal">By continuing, you agree to Moji's terms and privacy policy.</p>
+            <p class="auth-switch">New to Moji? <a th:href="@{/register}">Create an account</a></p>
+        </div>
+    </section>
+</main>
+<span id="password-help" class="sr-only">Password recovery will be available soon.</span>
+<script th:src="@{/js/auth.js}"></script>
 </body>
 </html>
