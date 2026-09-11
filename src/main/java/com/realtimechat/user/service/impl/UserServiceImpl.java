@@ -4,8 +4,10 @@ import com.realtimechat.user.dto.request.ChangePasswordRequest;
 import com.realtimechat.user.dto.request.CreateUserRequest;
 import com.realtimechat.user.dto.request.UpdateUserRequest;
 import com.realtimechat.user.dto.response.UserResponse;
+import com.realtimechat.user.entity.Role;
 import com.realtimechat.user.entity.User;
 import com.realtimechat.user.mapper.UserMapper;
+import com.realtimechat.user.repository.RoleRepository;
 import com.realtimechat.user.repository.UserRepository;
 import com.realtimechat.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -32,6 +35,10 @@ public class UserServiceImpl implements UserService {
 
         User user = UserMapper.toUser(createUserRequest);
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
+
+        Role defaultRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new IllegalStateException("Role USER chưa được khởi tạo"));
+        user.getRoles().add(defaultRole);
 
         return UserMapper.toUserResponse(userRepository.save(user));
     }
