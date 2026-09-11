@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html
+        lang="vi"
+        xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng Nhập | Spring ChatApp</title>
+</head>
+<body>
+    <form th:action="@{/login}" method="POST">
+        <input type="hidden"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}"
+        >
+        
+        <div>
+            <label for="email">Email: </label>
+            <input type="text"
+                   id="email"
+                   name="email"
+                   placeholder="Nhập email của bạn..."
+                   autocomplete="email"
+                   required>
+        </div>
+        <div>
+            <label for="password">Password: </label>
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Nhập password của bạn..."
+                   autocomplete="current-password"
+                   required>
+        </div>
+
+        <div>
+            <input type="checkbox" id="terms">
+            <label for="terms">
+                Bằng việc đăng nhập hoặc tạo tài khoản, bạn xác nhận đã đọc, hiểu và đồng ý
+                tuân thủ
+                <a th:href="@{/terms}" target="_blank">Điều khoản sử dụng</a>
+                cùng
+                <a th:href="@{/privacy}" target="_blank">Chính sách quyền riêng tư</a>
+                của Realtime Chat.
+            </label>
+        </div>
+        
+        <button type="submit">Đăng nhập</button>
+    </form>
+</body>
+</html>

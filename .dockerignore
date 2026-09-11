@@ -1,0 +1,12 @@
+.git
+.github
+.gradle
+build/*
+!build/libs/
+!build/libs/app.jar
+gradle
+src
+*.iml
+.idea
+README.md
+docker-compose.yaml
