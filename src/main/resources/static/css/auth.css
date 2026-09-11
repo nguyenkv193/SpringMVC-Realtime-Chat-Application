@@ -539,7 +539,7 @@ a {
 .input-wrap input {
     width: 100%;
     min-height: 42px;
-    padding: 0 14px 0 42px;
+    padding: 0 46px 0 42px;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     outline: none;
@@ -814,7 +814,8 @@ a {
 
     .field-group--split {
         display: flex;
-        gap: 20px;
+        flex-direction: column;
+        gap: 16px;
     }
 }
 
