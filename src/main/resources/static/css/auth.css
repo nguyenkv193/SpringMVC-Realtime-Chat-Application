@@ -549,6 +549,19 @@ a {
     transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
+/* Keep the custom password toggle as the only visibility control. */
+.input-wrap input[type='password']::-ms-reveal,
+.input-wrap input[type='password']::-ms-clear {
+    display: none;
+}
+
+.input-wrap input[type='password']::-webkit-credentials-auto-fill-button {
+    position: absolute;
+    right: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .input-wrap input::placeholder {
     color: #b2b7bc;
 }
