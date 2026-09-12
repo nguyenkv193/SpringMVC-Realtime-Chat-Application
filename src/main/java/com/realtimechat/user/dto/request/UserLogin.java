@@ -11,10 +11,10 @@ import lombok.*;
 @Builder
 public class UserLogin {
 
-    @Email(message = "Email không đúng định dạng")
-    @NotBlank(message = "Email không được để trống")
+    @Email(message = "{validation.email.invalid}")
+    @NotBlank(message = "{validation.email.required}")
     private String email;
 
-    @NotBlank(message = "Mật khẩu không được để trống")
+    @NotBlank(message = "{validation.password.required}")
     private String password;
 }

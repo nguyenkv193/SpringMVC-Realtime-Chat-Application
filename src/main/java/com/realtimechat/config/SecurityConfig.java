@@ -1,5 +1,7 @@
 package com.realtimechat.config;
 
+import com.realtimechat.auth.LoginAuthenticationFailureHandler;
+import com.realtimechat.user.service.impl.GoogleOidcUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,12 +10,9 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -21,7 +20,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity httpSecurity,
-            AuthenticationProvider authenticationProvider
+            AuthenticationProvider authenticationProvider,
+            LoginAuthenticationFailureHandler loginAuthenticationFailureHandler,
+            GoogleOidcUserService googleOidcUserService
     ) throws Exception {
         httpSecurity
                 .authenticationProvider(authenticationProvider)
@@ -32,7 +33,7 @@ public class SecurityConfig {
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/chat", true)
-                                .failureUrl("/login?error=true")
+                                .failureHandler(loginAuthenticationFailureHandler)
                                 .usernameParameter("email")
                                 .passwordParameter("password")
                                 .permitAll()
@@ -42,9 +43,17 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .permitAll()
-                ).authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/login", "/logout", "/register", "/css/**", "/js/**", "/images/**",
-                                        "/error")
+                )
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/chat", true)
+                        .failureUrl("/login?oauth2Error=true")
+                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(googleOidcUserService))
+                        .permitAll()
+                )
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/login", "/logout", "/register", "/forgot-password", "/css/**", "/js/**", "/images/**",
+                                        "/error", "/oauth2/**", "/login/oauth2/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -70,35 +79,6 @@ public class SecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
 
         return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails user1 = User.builder()
-                .username("user_1")
-                .password(passwordEncoder.encode("123456"))
-                .roles("USER")
-                .build();
-
-        UserDetails user2 = User.builder()
-                .username("user_2")
-                .password(passwordEncoder.encode("123456"))
-                .roles("USER")
-                .build();
-
-        UserDetails user3 = User.builder()
-                .username("user_3")
-                .password(passwordEncoder.encode("123456"))
-                .roles("USER")
-                .build();
-
-        UserDetails user4 = User.builder()
-                .username("user_4")
-                .password(passwordEncoder.encode("123456"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user1, user2, user3, user4);
     }
 
     @Bean

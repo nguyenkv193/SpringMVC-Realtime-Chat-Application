@@ -1,10 +1,14 @@
 package com.realtimechat.auth;
 
+import com.realtimechat.common.exception.ResourceAlreadyExistsException;
 import com.realtimechat.user.dto.request.CreateUserRequest;
 import com.realtimechat.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RegistrationController {
 
     private final UserService userService;
+    private final MessageSource messageSource;
 
     @GetMapping
-    public String registerPage() {
+    public String registerPage(Model model) {
+        model.addAttribute("createUserRequest", new CreateUserRequest());
         return "auth/register";
     }
 
@@ -35,9 +41,18 @@ public class RegistrationController {
         try {
             userService.register(request);
             return "redirect:/login?registered=true";
-        } catch (IllegalArgumentException exception) {
-            bindingResult.reject("register", exception.getMessage());
+        } catch (ResourceAlreadyExistsException exception) {
+            bindingResult.reject("register", resolveMessage(exception.getMessage()));
             return "auth/register";
         }
+    }
+
+    private String resolveMessage(String messageCode) {
+        return messageSource.getMessage(
+                messageCode,
+                null,
+                messageCode,
+                LocaleContextHolder.getLocale()
+        );
     }
 }
