@@ -52,14 +52,15 @@ a {
 .auth-page {
     display: grid;
     min-height: 100vh;
-    padding: 18px;
+    padding: 28px;
     place-items: center;
 }
 
 .auth-shell {
     display: grid;
-    width: min(760px, 100%);
-    min-height: 500px;
+    width: min(1020px, 100%);
+    height: min(640px, calc(100vh - 56px));
+    min-height: 520px;
     overflow: hidden;
     border: 1px solid rgba(231, 228, 220, 0.85);
     border-radius: var(--radius-xl);
@@ -71,7 +72,7 @@ a {
 .auth-showcase {
     position: relative;
     display: flex;
-    min-height: 500px;
+    min-height: 0;
     overflow: hidden;
     padding: 20px 22px 16px;
     color: #fffaf2;
@@ -984,6 +985,7 @@ a {
     .auth-shell {
         display: block;
         width: 100%;
+        height: auto;
         min-height: 100vh;
         border: 0;
         border-radius: 0;

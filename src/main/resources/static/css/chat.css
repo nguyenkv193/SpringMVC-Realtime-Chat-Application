@@ -1139,7 +1139,7 @@ kbd {
 }
 
 .chat-app.details-collapsed {
-    grid-template-columns: 286px minmax(0, 1fr);
+    grid-template-columns: 225px minmax(0, 1fr);
 }
 
 .chat-app.details-collapsed .details-panel {
