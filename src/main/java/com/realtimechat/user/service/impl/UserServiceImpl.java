@@ -31,11 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse register(CreateUserRequest createUserRequest) {
         if(userRepository.existsByUsername(createUserRequest.getUsername())) {
-            throw new ResourceAlreadyExistsException("Username đã tồn tại");
+            throw new ResourceAlreadyExistsException("error.username.exists");
         }
 
         if(userRepository.existsByEmail(createUserRequest.getEmail())) {
-            throw new ResourceAlreadyExistsException("Email đã tồn tại");
+            throw new ResourceAlreadyExistsException("error.email.exists");
         }
 
         User user = UserMapper.toUser(createUserRequest);
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
         if(request.getUsername() != null && !request.getUsername().equals(username)) {
             if (userRepository.existsByUsername(request.getUsername())) {
-                throw new ResourceAlreadyExistsException("Username đã tồn tại");
+                throw new ResourceAlreadyExistsException("error.username.exists");
             }
 
             user.setUsername(username);
@@ -74,11 +74,11 @@ public class UserServiceImpl implements UserService {
         User user = findUserByUsername(username);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new InvalidPasswordException("Mật khẩu hiện tại không đúng");
+            throw new InvalidPasswordException("error.password.invalid");
         }
 
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            throw new PasswordMismatchException("Mật khẩu xác nhận không khớp");
+            throw new PasswordMismatchException("error.password.mismatch");
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -88,6 +88,6 @@ public class UserServiceImpl implements UserService {
     private User findUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Không tìm thấy người dùng: " + username));
+                        new ResourceNotFoundException("error.user.not-found"));
     }
 }

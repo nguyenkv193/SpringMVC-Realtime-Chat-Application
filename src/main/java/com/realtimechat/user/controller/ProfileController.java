@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProfileController {
 
     private final UserService userService;
+    private final MessageSource messageSource;
     private final SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @GetMapping
@@ -68,7 +71,7 @@ public class ProfileController {
 
             return "redirect:/profile?updated=true";
         } catch (ResourceAlreadyExistsException exception) {
-            bindingResult.reject("updateProfile", exception.getMessage());
+            bindingResult.reject("updateProfile", resolveMessage(exception.getMessage()));
             model.addAttribute("user", userService.getCurrentUser(authentication.getName()));
             return "user/profile";
         }
@@ -93,8 +96,17 @@ public class ProfileController {
             userService.changePassword(authentication.getName(), request);
             return "redirect:/profile?passwordChanged=true";
         } catch (InvalidPasswordException | PasswordMismatchException exception) {
-            bindingResult.reject("changePassword", exception.getMessage());
+            bindingResult.reject("changePassword", resolveMessage(exception.getMessage()));
             return "user/change-password";
         }
+    }
+
+    private String resolveMessage(String messageCode) {
+        return messageSource.getMessage(
+                messageCode,
+                null,
+                messageCode,
+                LocaleContextHolder.getLocale()
+        );
     }
 }

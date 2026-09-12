@@ -13,26 +13,26 @@ import lombok.*;
 @Builder
 public class ChangePasswordRequest {
 
-    @NotBlank(message = "Mật khẩu hiện tại không được để trống")
+    @NotBlank(message = "{validation.currentPassword.required}")
     private String oldPassword;
 
-    @NotBlank(message = "Mật khẩu mới không được để trống")
-    @Size(min = 6, message = "Mật khẩu phải tối thiểu 6 ký tự")
+    @NotBlank(message = "{validation.newPassword.required}")
+    @Size(min = 6, message = "{validation.password.size}")
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
-            message = "Mật khẩu phải có chữ thường, chữ hoa, số và ký tự đặc biệt"
+            message = "{validation.password.pattern}"
     )
     private String newPassword;
 
-    @NotBlank(message = "Xác nhận mật khẩu mới không được để trống")
-    @Size(min = 6, message = "Mật khẩu phải tối thiểu 6 ký tự")
+    @NotBlank(message = "{validation.confirmNewPassword.required}")
+    @Size(min = 6, message = "{validation.password.size}")
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
-            message = "Mật khẩu phải có chữ thường, chữ hoa, số và ký tự đặc biệt"
+            message = "{validation.password.pattern}"
     )
     private String confirmPassword;
 
-    @AssertTrue(message = "Mật khẩu xác nhận không khớp")
+    @AssertTrue(message = "{validation.password.mismatch}")
     public boolean isPasswordMatched() {
         return newPassword != null &&
                 confirmPassword != null &&

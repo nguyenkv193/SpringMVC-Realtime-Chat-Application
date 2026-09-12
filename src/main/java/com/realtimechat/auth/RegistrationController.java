@@ -5,6 +5,8 @@ import com.realtimechat.user.dto.request.CreateUserRequest;
 import com.realtimechat.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RegistrationController {
 
     private final UserService userService;
+    private final MessageSource messageSource;
 
     @GetMapping
     public String registerPage(Model model) {
@@ -39,8 +42,17 @@ public class RegistrationController {
             userService.register(request);
             return "redirect:/login?registered=true";
         } catch (ResourceAlreadyExistsException exception) {
-            bindingResult.reject("register", exception.getMessage());
+            bindingResult.reject("register", resolveMessage(exception.getMessage()));
             return "auth/register";
         }
+    }
+
+    private String resolveMessage(String messageCode) {
+        return messageSource.getMessage(
+                messageCode,
+                null,
+                messageCode,
+                LocaleContextHolder.getLocale()
+        );
     }
 }

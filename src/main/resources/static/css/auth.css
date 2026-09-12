@@ -425,6 +425,36 @@ a {
     margin-top: 24px;
 }
 
+.language-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 23px;
+    gap: 7px;
+    color: #a0a6ac;
+    font-size: 10px;
+    line-height: 1;
+}
+
+.language-switcher > span:first-child {
+    margin-right: 3px;
+}
+
+.language-switcher a {
+    color: var(--ink-soft);
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    text-underline-offset: 3px;
+}
+
+.language-switcher a:hover,
+.language-switcher a:focus-visible {
+    color: var(--accent-deep);
+    text-decoration: underline;
+    outline: none;
+}
+
 .auth-heading h2 {
     margin: 0;
     color: var(--ink);

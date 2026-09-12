@@ -2,6 +2,9 @@ package com.realtimechat.common.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,12 +17,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Instant;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final MessageSource messageSource;
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     @ResponseBody
@@ -27,7 +33,7 @@ public class GlobalExceptionHandler {
             ResourceAlreadyExistsException exception,
             HttpServletRequest request
     ) {
-        return buildResponse(HttpStatus.CONFLICT, exception.getMessage(), request);
+        return buildResponse(HttpStatus.CONFLICT, resolveMessage(exception.getMessage()), request);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -36,7 +42,7 @@ public class GlobalExceptionHandler {
             ResourceNotFoundException exception,
             HttpServletRequest request
     ) {
-        return buildResponse(HttpStatus.NOT_FOUND, exception.getMessage(), request);
+        return buildResponse(HttpStatus.NOT_FOUND, resolveMessage(exception.getMessage()), request);
     }
 
     @ExceptionHandler({InvalidPasswordException.class, PasswordMismatchException.class})
@@ -45,7 +51,7 @@ public class GlobalExceptionHandler {
             IllegalArgumentException exception,
             HttpServletRequest request
     ) {
-        return buildResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
+        return buildResponse(HttpStatus.BAD_REQUEST, resolveMessage(exception.getMessage()), request);
     }
 
     @ExceptionHandler(RoleNotFoundException.class)
@@ -58,7 +64,7 @@ public class GlobalExceptionHandler {
 
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Cấu hình quyền hệ thống không hợp lệ",
+                resolveMessage(exception.getMessage()),
                 request
         );
     }
@@ -69,7 +75,7 @@ public class GlobalExceptionHandler {
             IllegalArgumentException exception,
             HttpServletRequest request
     ) {
-        return buildResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
+        return buildResponse(HttpStatus.BAD_REQUEST, resolveMessage(exception.getMessage()), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -95,7 +101,7 @@ public class GlobalExceptionHandler {
     ) {
         String message = exception.getConstraintViolations()
                 .stream()
-                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                .map(violation -> violation.getPropertyPath() + ": " + resolveMessage(violation.getMessage()))
                 .collect(Collectors.joining("; "));
 
         return buildResponse(HttpStatus.BAD_REQUEST, message, request);
@@ -109,7 +115,7 @@ public class GlobalExceptionHandler {
     ) {
         return buildResponse(
                 HttpStatus.CONFLICT,
-                "Dữ liệu đã tồn tại hoặc không hợp lệ",
+                resolveMessage("error.data-integrity"),
                 request
         );
     }
@@ -124,13 +130,22 @@ public class GlobalExceptionHandler {
 
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Đã xảy ra lỗi hệ thống, vui lòng thử lại sau",
+                resolveMessage("error.internal"),
                 request
         );
     }
 
     private String formatFieldError(FieldError fieldError) {
-        return fieldError.getField() + ": " + fieldError.getDefaultMessage();
+        return fieldError.getField() + ": " + resolveMessage(fieldError.getDefaultMessage());
+    }
+
+    private String resolveMessage(String messageCode) {
+        if (messageCode == null || messageCode.isBlank()) {
+            return messageCode;
+        }
+
+        Locale locale = LocaleContextHolder.getLocale();
+        return messageSource.getMessage(messageCode, null, messageCode, locale);
     }
 
     private ResponseEntity<ApiErrorResponse> buildResponse(
