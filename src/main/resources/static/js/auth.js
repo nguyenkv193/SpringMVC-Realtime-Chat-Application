@@ -32,4 +32,25 @@
         password.addEventListener('input', validatePasswords);
         confirmPassword.addEventListener('input', validatePasswords);
     }
+
+    var toast = document.querySelector('[data-toast]');
+    if (toast) {
+        var dismissToast = function () {
+            if (toast.classList.contains('is-closing')) {
+                return;
+            }
+
+            toast.classList.add('is-closing');
+            window.setTimeout(function () {
+                toast.remove();
+            }, 360);
+        };
+
+        var closeButton = toast.querySelector('[data-toast-close]');
+        if (closeButton) {
+            closeButton.addEventListener('click', dismissToast);
+        }
+
+        window.setTimeout(dismissToast, 5200);
+    }
 })();

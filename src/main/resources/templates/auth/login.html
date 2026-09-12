@@ -79,10 +79,6 @@
                 <p>Pick up the conversation right where you left off.</p>
             </div>
 
-            <div class="auth-alert auth-alert--error" role="alert" th:if="${loginError}">
-                <span class="alert-icon" aria-hidden="true">!</span>
-                <span>That email or password doesn't look right. Please try again.</span>
-            </div>
             <div class="auth-alert auth-alert--success" role="status" th:if="${param.logout}">
                 <span class="alert-icon" aria-hidden="true">✓</span>
                 <span>You have been signed out successfully.</span>
@@ -147,6 +143,21 @@
     </section>
 </main>
 <span id="password-help" class="sr-only">Password recovery will be available soon.</span>
+<div class="toast-stack" aria-live="assertive" aria-atomic="true">
+    <div class="auth-toast auth-toast--error" data-toast role="alert" th:if="${loginError}">
+        <span class="toast-icon" aria-hidden="true">!</span>
+        <span class="toast-copy">
+            <strong>Sign in failed</strong>
+            <span>That email or password doesn't look right. Please try again.</span>
+        </span>
+        <button class="toast-close" type="button" data-toast-close aria-label="Close notification">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+        </button>
+        <span class="toast-progress" aria-hidden="true"></span>
+    </div>
+</div>
 <script th:src="@{/js/auth.js}"></script>
 </body>
 </html>
