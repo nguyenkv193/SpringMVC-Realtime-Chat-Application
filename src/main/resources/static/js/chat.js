@@ -30,6 +30,7 @@
     var roomSubscription = null;
     var typingSubscription = null;
     var stompClient = null;
+    var typingHeartbeat = null;
     var remoteTypingTimer = null;
     var locallyTyping = false;
     var activeFilter = 'all';
@@ -76,7 +77,7 @@
 
         remoteTypingTimer = window.setTimeout(
                 hideTypingIndicator,
-                2400
+                3000
         );
     };
 
@@ -121,9 +122,30 @@
             locallyTyping = true;
             publishTypingState(true);
         }
+
+        if (!typingHeartbeat) {
+            typingHeartbeat = window.setInterval(function () {
+                if (document.hidden
+                        || document.activeElement !== messageInput
+                        || !currentRoomId
+                        || messageInput.readOnly
+                        || !stompClient
+                        || !stompClient.connected) {
+                    stopTyping();
+                    return;
+                }
+
+                publishTypingState(true);
+            }, 1000);
+        }
     };
 
     var stopTyping = function () {
+        if (typingHeartbeat) {
+            window.clearInterval(typingHeartbeat);
+            typingHeartbeat = null;
+        }
+
         if (!locallyTyping) {
             return;
         }
@@ -890,6 +912,14 @@
             }
         });
     }
+
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            stopTyping();
+        } else if (document.activeElement === messageInput) {
+            startTyping();
+        }
+    });
 
     if (composer) {
         composer.addEventListener('submit', async function (event) {
