@@ -30,7 +30,6 @@
     var roomSubscription = null;
     var typingSubscription = null;
     var stompClient = null;
-    var typingStopTimer = null;
     var remoteTypingTimer = null;
     var locallyTyping = false;
     var activeFilter = 'all';
@@ -109,21 +108,7 @@
         });
     };
 
-    var stopTyping = function () {
-        if (typingStopTimer) {
-            window.clearTimeout(typingStopTimer);
-            typingStopTimer = null;
-        }
-
-        if (!locallyTyping) {
-            return;
-        }
-
-        locallyTyping = false;
-        publishTypingState(false);
-    };
-
-    var handleTypingInput = function () {
+    var startTyping = function () {
         if (!currentRoomId
                 || !messageInput
                 || messageInput.readOnly
@@ -132,21 +117,19 @@
             return;
         }
 
-        if (!messageInput.value.trim()) {
-            stopTyping();
-            return;
-        }
-
         if (!locallyTyping) {
             locallyTyping = true;
             publishTypingState(true);
         }
+    };
 
-        if (typingStopTimer) {
-            window.clearTimeout(typingStopTimer);
+    var stopTyping = function () {
+        if (!locallyTyping) {
+            return;
         }
 
-        typingStopTimer = window.setTimeout(stopTyping, 1000);
+        locallyTyping = false;
+        publishTypingState(false);
     };
 
     var apiRequest = async function (url, options) {
@@ -885,9 +868,10 @@
     };
 
     if (messageInput) {
+        messageInput.addEventListener('focus', startTyping);
         messageInput.addEventListener('input', function () {
             resizeMessageInput();
-            handleTypingInput();
+            startTyping();
         });
         messageInput.addEventListener('blur', stopTyping);
         messageInput.addEventListener('click', function () {
@@ -935,6 +919,10 @@
                 resizeMessageInput();
             } catch (error) {
                 announce(error.message);
+            } finally {
+                if (document.activeElement === messageInput) {
+                    startTyping();
+                }
             }
         });
     }
@@ -955,6 +943,10 @@
         stompClient.onConnect = function () {
             if (currentRoomId) {
                 subscribeToRoom(currentRoomId);
+            }
+
+            if (document.activeElement === messageInput) {
+                startTyping();
             }
         };
 
