@@ -36,7 +36,7 @@ body {
 body {
     margin: 0;
     color: var(--chat-ink);
-    background: var(--chat-canvas);
+    background: linear-gradient(135deg, #f6e9e2 0%, #f8f5ef 49%, #e2f1e9 100%);
     font-family: 'DM Sans', 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
 }
@@ -72,27 +72,26 @@ a {
 }
 
 .chat-page {
+    display: grid;
     min-height: 100vh;
-    padding: 16px;
-    background:
-        radial-gradient(circle at 8% 7%, rgba(242, 103, 82, 0.07), transparent 22rem),
-        radial-gradient(circle at 95% 92%, rgba(213, 234, 223, 0.62), transparent 24rem),
-        var(--chat-canvas);
+    padding: 28px;
+    place-items: center;
+    background: linear-gradient(135deg, #f6e9e2 0%, #f8f5ef 49%, #e2f1e9 100%);
 }
 
 .chat-app {
     position: relative;
     display: grid;
-    width: min(1500px, 100%);
-    height: calc(100vh - 32px);
-    min-height: 650px;
+    width: min(1120px, 100%);
+    height: min(700px, calc(100vh - 56px));
+    min-height: 560px;
     margin: 0 auto;
     overflow: hidden;
     border: 1px solid rgba(232, 228, 220, 0.95);
     border-radius: var(--chat-radius-xl);
     background: var(--chat-paper);
     box-shadow: var(--chat-shadow);
-    grid-template-columns: 286px minmax(0, 1fr) 282px;
+    grid-template-columns: 250px minmax(0, 1fr) 240px;
     isolation: isolate;
 }
 
