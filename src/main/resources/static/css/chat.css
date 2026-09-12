@@ -750,6 +750,7 @@ kbd {
 }
 
 .chat-scroll {
+    flex: 1 1 auto;
     min-height: 0;
     padding: 34px clamp(26px, 5vw, 82px) 16px;
     overflow: auto;
