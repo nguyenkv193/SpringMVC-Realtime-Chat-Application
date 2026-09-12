@@ -33,8 +33,18 @@
         confirmPassword.addEventListener('input', validatePasswords);
     }
 
-    var loginError = document.querySelector('[data-login-error]');
-    if (loginError) {
+    var authErrorMessages = document.querySelectorAll('[data-auth-error-message]');
+    if (authErrorMessages.length > 0) {
+        var messages = Array.prototype.map.call(authErrorMessages, function (errorElement) {
+            return errorElement.textContent.trim();
+        }).filter(function (message) {
+            return message.length > 0;
+        });
+
+        var uniqueMessages = messages.filter(function (message, index) {
+            return messages.indexOf(message) === index;
+        });
+
         if (typeof window.Toastify === 'function') {
             var toastContent = document.createElement('div');
             toastContent.className = 'moji-toast-content';
@@ -49,7 +59,7 @@
 
             var copy = document.createElement('span');
             copy.className = 'moji-toast-copy';
-            copy.textContent = loginError.textContent.trim();
+            copy.textContent = uniqueMessages.join(' • ');
 
             toastContent.append(icon, copy);
 
@@ -65,11 +75,17 @@
                 offset: {x: 20, y: 20}
             }).showToast();
 
-            loginError.remove();
+            document.querySelectorAll('[data-auth-error-container]').forEach(function (errorContainer) {
+                errorContainer.remove();
+            });
         } else {
-            loginError.hidden = false;
-            loginError.classList.remove('sr-only');
-            loginError.classList.add('auth-alert', 'auth-alert--error');
+            document.querySelectorAll('[data-auth-error-container]').forEach(function (errorContainer) {
+                if (errorContainer.hidden) {
+                    errorContainer.hidden = false;
+                    errorContainer.classList.remove('sr-only');
+                    errorContainer.classList.add('auth-alert', 'auth-alert--error');
+                }
+            });
         }
     }
 })();

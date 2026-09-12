@@ -144,8 +144,8 @@
     </section>
 </main>
 <span id="password-help" class="sr-only">Password recovery will be available soon.</span>
-<div class="sr-only" data-login-error role="alert" th:if="${loginError}" hidden>
-    Check your email or password and try again.
+<div class="sr-only" data-auth-error-container role="alert" th:if="${loginError}" hidden>
+    <span data-auth-error-message>Check your email or password and try again.</span>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.js"></script>
 <script th:src="@{/js/auth.js}"></script>
