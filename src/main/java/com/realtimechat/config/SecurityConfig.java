@@ -1,6 +1,7 @@
 package com.realtimechat.config;
 
 import com.realtimechat.auth.LoginAuthenticationFailureHandler;
+import com.realtimechat.user.service.impl.GoogleOidcUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +21,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity httpSecurity,
             AuthenticationProvider authenticationProvider,
-            LoginAuthenticationFailureHandler loginAuthenticationFailureHandler
+            LoginAuthenticationFailureHandler loginAuthenticationFailureHandler,
+            GoogleOidcUserService googleOidcUserService
     ) throws Exception {
         httpSecurity
                 .authenticationProvider(authenticationProvider)
@@ -41,9 +43,17 @@ public class SecurityConfig {
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .permitAll()
-                ).authorizeHttpRequests(auth -> auth
+                )
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/chat", true)
+                        .failureUrl("/login?oauth2Error=true")
+                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(googleOidcUserService))
+                        .permitAll()
+                )
+                .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/login", "/logout", "/register", "/forgot-password", "/css/**", "/js/**", "/images/**",
-                                        "/error")
+                                        "/error", "/oauth2/**", "/login/oauth2/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )

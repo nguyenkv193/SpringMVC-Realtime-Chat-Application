@@ -838,6 +838,63 @@ a {
     color: var(--sun);
 }
 
+.auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 1px 0 0;
+    gap: 10px;
+    color: #a0a6ac;
+    font-size: 10px;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    height: 1px;
+    flex: 1;
+    background: var(--line);
+    content: '';
+}
+
+.google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 0 16px;
+    gap: 9px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    color: var(--ink-soft);
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.google-button svg {
+    width: 17px;
+    height: 17px;
+    color: #4285f4;
+}
+
+.google-button:hover {
+    border-color: #d2cec4;
+    background: #fffefa;
+    box-shadow: 0 8px 18px rgba(23, 33, 43, 0.08);
+    transform: translateY(-1px);
+}
+
+.google-button:focus-visible {
+    border-color: var(--accent);
+    outline: 3px solid rgba(242, 103, 82, 0.22);
+    outline-offset: 2px;
+}
+
 .auth-legal {
     margin: 14px 0 0;
     color: #a0a6ac;
