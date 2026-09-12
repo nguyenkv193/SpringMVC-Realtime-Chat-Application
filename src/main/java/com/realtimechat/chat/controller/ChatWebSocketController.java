@@ -1,7 +1,9 @@
 package com.realtimechat.chat.controller;
 
+import com.realtimechat.chat.dto.request.TypingRequest;
 import com.realtimechat.chat.dto.request.SendMessageRequest;
 import com.realtimechat.chat.dto.response.MessageResponse;
+import com.realtimechat.chat.dto.response.TypingEvent;
 import com.realtimechat.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -40,6 +42,30 @@ public class ChatWebSocketController {
         messagingTemplate.convertAndSend(
                 "/topic/chat/rooms/" + roomId,
                 response
+        );
+    }
+
+    @MessageMapping("/chat.typing/{roomId}")
+    public void updateTypingState(
+            @DestinationVariable Long roomId,
+            @Payload TypingRequest request,
+            Principal principal
+    ) {
+        if (principal == null) {
+            throw new IllegalStateException(
+                    "WebSocket user is not authenticated"
+            );
+        }
+
+        chatService.assertRoomMember(principal.getName(), roomId);
+
+        messagingTemplate.convertAndSend(
+                "/topic/chat/rooms/" + roomId + "/typing",
+                new TypingEvent(
+                        roomId,
+                        principal.getName(),
+                        request != null && request.typing()
+                )
         );
     }
 }

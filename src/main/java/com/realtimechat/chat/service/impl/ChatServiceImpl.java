@@ -60,6 +60,14 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public void assertRoomMember(
+            String username,
+            Long roomId
+    ) {
+        findRoomForMember(findUser(username), roomId);
+    }
+
+    @Override
     @Transactional
     public ChatRoomResponse createDirectRoom(
             String username,

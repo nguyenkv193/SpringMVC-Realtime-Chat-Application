@@ -16,6 +16,11 @@ public interface ChatService {
             Long roomId
     );
 
+    void assertRoomMember(
+            String username,
+            Long roomId
+    );
+
     ChatRoomResponse createDirectRoom(
             String username,
             CreateDirectRoomRequest request

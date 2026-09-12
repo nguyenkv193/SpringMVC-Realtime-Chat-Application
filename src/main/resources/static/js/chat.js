@@ -14,6 +14,8 @@
     var chatScroll = document.querySelector('[data-chat-scroll]');
     var messageThread = document.querySelector('[data-message-thread]');
     var chatIntro = document.querySelector('[data-chat-intro]');
+    var typingState = document.querySelector('[data-typing-state]');
+    var typingLabel = document.querySelector('[data-typing-label]');
     var composer = document.querySelector('[data-composer]');
     var messageInput = document.querySelector('[data-message-input]');
     var sendButton = document.querySelector('.send-button');
@@ -25,7 +27,11 @@
     var currentRoom = null;
     var currentRoomId = null;
     var roomSubscription = null;
+    var typingSubscription = null;
     var stompClient = null;
+    var typingStopTimer = null;
+    var remoteTypingTimer = null;
+    var locallyTyping = false;
     var activeFilter = 'all';
     var csrfTokenElement = document.querySelector('meta[name="_csrf"]');
     var csrfHeaderElement = document.querySelector('meta[name="_csrf_header"]');
@@ -49,6 +55,106 @@
         window.setTimeout(function () {
             liveRegion.textContent = message;
         }, 20);
+    };
+
+    var hideTypingIndicator = function () {
+        if (remoteTypingTimer) {
+            window.clearTimeout(remoteTypingTimer);
+            remoteTypingTimer = null;
+        }
+
+        if (typingState) {
+            typingState.hidden = true;
+        }
+    };
+
+    var showTypingIndicator = function (username) {
+        if (!typingState) {
+            return;
+        }
+
+        if (typingLabel) {
+            typingLabel.textContent = (username || 'Someone') + ' is typing';
+        }
+
+        typingState.hidden = false;
+
+        if (remoteTypingTimer) {
+            window.clearTimeout(remoteTypingTimer);
+        }
+
+        remoteTypingTimer = window.setTimeout(
+                hideTypingIndicator,
+                2400
+        );
+    };
+
+    var handleTypingEvent = function (event) {
+        if (!event
+                || !currentRoomId
+                || String(event.roomId) !== String(currentRoomId)
+                || event.username === currentUsername) {
+            return;
+        }
+
+        if (event.typing) {
+            showTypingIndicator(event.username);
+        } else {
+            hideTypingIndicator();
+        }
+    };
+
+    var publishTypingState = function (typing) {
+        if (!currentRoomId
+                || !stompClient
+                || !stompClient.connected) {
+            return;
+        }
+
+        stompClient.publish({
+            destination: '/app/chat.typing/' + currentRoomId,
+            body: JSON.stringify({typing: Boolean(typing)})
+        });
+    };
+
+    var stopTyping = function () {
+        if (typingStopTimer) {
+            window.clearTimeout(typingStopTimer);
+            typingStopTimer = null;
+        }
+
+        if (!locallyTyping) {
+            return;
+        }
+
+        locallyTyping = false;
+        publishTypingState(false);
+    };
+
+    var handleTypingInput = function () {
+        if (!currentRoomId
+                || !messageInput
+                || messageInput.readOnly
+                || !stompClient
+                || !stompClient.connected) {
+            return;
+        }
+
+        if (!messageInput.value.trim()) {
+            stopTyping();
+            return;
+        }
+
+        if (!locallyTyping) {
+            locallyTyping = true;
+            publishTypingState(true);
+        }
+
+        if (typingStopTimer) {
+            window.clearTimeout(typingStopTimer);
+        }
+
+        typingStopTimer = window.setTimeout(stopTyping, 1000);
     };
 
     var apiRequest = async function (url, options) {
@@ -252,6 +358,8 @@
         var introDescription = document.querySelector('[data-chat-intro-description]');
 
         if (!room) {
+            hideTypingIndicator();
+
             if (mainPanel) {
                 mainPanel.dataset.currentRoomId = '';
             }
@@ -540,15 +648,29 @@
             roomSubscription.unsubscribe();
         }
 
+        if (typingSubscription) {
+            typingSubscription.unsubscribe();
+        }
+
         roomSubscription = stompClient.subscribe(
                 '/topic/chat/rooms/' + roomId,
                 function (frame) {
                     appendMessageToUI(JSON.parse(frame.body));
                 }
         );
+
+        typingSubscription = stompClient.subscribe(
+                '/topic/chat/rooms/' + roomId + '/typing',
+                function (frame) {
+                    handleTypingEvent(JSON.parse(frame.body));
+                }
+        );
     };
 
     var selectRoom = function (room) {
+        stopTyping();
+        hideTypingIndicator();
+
         currentRoom = room;
         currentRoomId = room ? String(room.id) : null;
 
@@ -725,7 +847,11 @@
     };
 
     if (messageInput) {
-        messageInput.addEventListener('input', resizeMessageInput);
+        messageInput.addEventListener('input', function () {
+            resizeMessageInput();
+            handleTypingInput();
+        });
+        messageInput.addEventListener('blur', stopTyping);
         messageInput.addEventListener('click', function () {
             if (!currentRoomId) {
                 messageInput.blur();
@@ -754,6 +880,8 @@
             if (!message || !currentRoomId) {
                 return;
             }
+
+            stopTyping();
 
             try {
                 if (stompClient && stompClient.connected) {
@@ -793,6 +921,9 @@
         };
 
         stompClient.onWebSocketClose = function () {
+            stopTyping();
+            hideTypingIndicator();
+
             if (currentRoomId) {
                 var status = document.querySelector('[data-contact-status]');
 

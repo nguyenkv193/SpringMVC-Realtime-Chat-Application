@@ -925,6 +925,10 @@ kbd {
     font-size: 10px;
 }
 
+.typing-state[hidden] {
+    display: none;
+}
+
 .typing-state__dots {
     display: flex;
     gap: 2px;
