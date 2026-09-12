@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 .deleteCookies("JSESSIONID")
                                 .permitAll()
                 ).authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/login", "/logout", "/register", "/css/**", "/js/**", "/images/**",
+                                .requestMatchers("/login", "/logout", "/register", "/forgot-password", "/css/**", "/js/**", "/images/**",
                                         "/error")
                                 .permitAll()
                                 .anyRequest().authenticated()
