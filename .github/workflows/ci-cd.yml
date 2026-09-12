@@ -40,6 +40,8 @@ jobs:
       DB_URL: jdbc:postgresql://localhost:5432/realtime_chat
       DB_USERNAME: postgres
       DB_PASSWORD: admin
+      GOOGLE_CLIENT_ID: ci-test-client-id
+      GOOGLE_CLIENT_SECRET: ci-test-client-secret
 
     permissions:
       contents: read
