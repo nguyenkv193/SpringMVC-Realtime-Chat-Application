@@ -115,7 +115,6 @@ a {
 .conversation-list-heading,
 .conversation-item__topline,
 .conversation-item__bottomline,
-.profile-shortcut,
 .conversation-contact,
 .conversation-header__actions,
 .composer-hint,
@@ -653,37 +652,44 @@ kbd {
     line-height: 1.5;
 }
 
-.sidebar-footer {
+.sidebar-account {
+    display: flex;
+    align-items: center;
+    min-width: 0;
     margin-top: auto;
-    padding-top: 10px;
+    padding: 12px 7px 0;
+    gap: 8px;
     border-top: 1px solid var(--chat-line);
 }
 
-.profile-shortcut {
+.sidebar-account__identity {
+    display: flex;
     min-width: 0;
-    padding: 8px 8px 4px;
-    gap: 9px;
-    border-radius: 11px;
-    text-decoration: none;
-    transition: background 160ms ease;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
 }
 
-.profile-shortcut:hover,
-.profile-shortcut:focus-visible {
-    background: #f1ede6;
+.sidebar-account__copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
 }
 
-.profile-shortcut__copy strong {
+.sidebar-account__copy strong {
     overflow: hidden;
+    color: var(--chat-ink);
     font-size: 11px;
+    font-weight: 700;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.profile-shortcut > svg {
-    width: 17px;
-    height: 17px;
-    color: var(--chat-faint);
+.sidebar-account__copy small {
+    margin-top: 2px;
+    color: var(--chat-muted);
+    font-size: 9px;
+    line-height: 1.2;
 }
 
 .conversation-panel {
@@ -726,15 +732,6 @@ kbd {
     font-size: 10px;
 }
 
-.account-menu {
-    display: flex;
-    align-items: center;
-    margin-left: 18px;
-    padding-left: 16px;
-    gap: 9px;
-    border-left: 1px solid var(--chat-line);
-}
-
 .account-avatar {
     display: inline-grid;
     width: 31px;
@@ -748,14 +745,14 @@ kbd {
     place-items: center;
 }
 
-.account-name {
-    max-width: 116px;
-    overflow: hidden;
-    color: var(--chat-ink-soft);
-    font-size: 11px;
-    font-weight: 700;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.sidebar-account .logout-button {
+    width: 31px;
+    padding: 0;
+    justify-content: center;
+}
+
+.sidebar-account .logout-button span {
+    display: none;
 }
 
 .logout-form {
@@ -789,6 +786,27 @@ kbd {
 .logout-button svg {
     width: 15px;
     height: 15px;
+}
+
+.avatar > img,
+.account-avatar > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+}
+
+.avatar > svg,
+.account-avatar > svg {
+    width: 56%;
+    height: 56%;
+}
+
+.avatar--default,
+.account-avatar--default {
+    color: #899198;
+    background: #eef0ee;
 }
 
 .status-dot {
@@ -1825,26 +1843,6 @@ kbd {
 
     .conversation-contact h1 {
         font-size: 14px;
-    }
-
-    .account-menu {
-        margin-left: 8px;
-        padding-left: 8px;
-        gap: 6px;
-    }
-
-    .account-name {
-        display: none;
-    }
-
-    .logout-button {
-        width: 31px;
-        padding: 0;
-        justify-content: center;
-    }
-
-    .logout-button span {
-        display: none;
     }
 
     .conversation-header__actions > .icon-button:nth-child(1),

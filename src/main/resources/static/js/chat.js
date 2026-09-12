@@ -22,6 +22,7 @@
     var liveRegion = document.querySelector('[data-live-region]');
     var modal = document.querySelector('[data-new-chat-modal]');
     var modalInput = document.querySelector('#new-chat-person');
+    var accountAvatar = document.querySelector('[data-account-avatar]');
 
     var rooms = [];
     var currentRoom = null;
@@ -36,15 +37,6 @@
     var csrfTokenElement = document.querySelector('meta[name="_csrf"]');
     var csrfHeaderElement = document.querySelector('meta[name="_csrf_header"]');
     var currentUsername = body.dataset.currentUsername || '';
-
-    var avatarClasses = [
-        'avatar--coral',
-        'avatar--mint',
-        'avatar--navy',
-        'avatar--yellow',
-        'avatar--lavender',
-        'avatar--blue'
-    ];
 
     var announce = function (message) {
         if (!liveRegion) {
@@ -202,25 +194,55 @@
         return data;
     };
 
-    var getInitials = function (name) {
-        var parts = (name || '?').trim().split(/\s+/).filter(Boolean);
+    var defaultAvatarMarkup = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+            + '<circle cx="12" cy="8" r="3.1" fill="currentColor"/>'
+            + '<path d="M5.8 19.2C6.45 15.9 8.55 14.2 12 14.2C15.45 14.2 17.55 15.9 18.2 19.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+            + '</svg>';
 
-        return parts.slice(-2).map(function (part) {
-            return part.charAt(0);
-        }).join('').toUpperCase() || '?';
+    var normalizeAvatarUrl = function (avatarUrl) {
+        if (typeof avatarUrl !== 'string') {
+            return '';
+        }
+
+        var normalizedUrl = avatarUrl.trim();
+        return normalizedUrl === 'null' || normalizedUrl === 'undefined'
+                ? ''
+                : normalizedUrl;
     };
 
-    var avatarClassFor = function (name) {
-        var value = (name || '').split('').reduce(function (sum, character) {
-            return sum + character.charCodeAt(0);
-        }, 0);
+    var applyAvatarContent = function (element, avatarUrl) {
+        if (!element) {
+            return;
+        }
 
-        return avatarClasses[value % avatarClasses.length];
+        var normalizedUrl = normalizeAvatarUrl(avatarUrl);
+        var hasImage = Boolean(normalizedUrl);
+
+        element.classList.toggle('avatar--default', !hasImage);
+        element.classList.toggle(
+                'account-avatar--default',
+                !hasImage && element.classList.contains('account-avatar')
+        );
+        element.innerHTML = '';
+
+        if (!hasImage) {
+            element.innerHTML = defaultAvatarMarkup;
+            return;
+        }
+
+        var image = document.createElement('img');
+        image.src = normalizedUrl;
+        image.alt = '';
+        image.loading = 'lazy';
+        image.addEventListener('error', function () {
+            applyAvatarContent(element, '');
+        }, {once: true});
+        element.appendChild(image);
     };
 
-    var createAvatar = function (name, sizeClass, online) {
+    var createAvatar = function (name, sizeClass, online, avatarUrl) {
         var avatar = document.createElement('span');
-        avatar.className = 'avatar ' + avatarClassFor(name);
+        avatar.className = 'avatar';
 
         if (sizeClass) {
             avatar.classList.add(sizeClass);
@@ -230,17 +252,17 @@
             avatar.classList.add('avatar--online');
         }
 
-        avatar.textContent = getInitials(name);
+        applyAvatarContent(avatar, avatarUrl);
         avatar.setAttribute('aria-hidden', 'true');
         return avatar;
     };
 
-    var updateAvatar = function (element, name, sizeClass, online) {
+    var updateAvatar = function (element, name, sizeClass, online, avatarUrl) {
         if (!element) {
             return;
         }
 
-        element.className = 'avatar ' + avatarClassFor(name);
+        element.className = 'avatar';
 
         if (sizeClass) {
             element.classList.add(sizeClass);
@@ -250,7 +272,16 @@
             element.classList.add('avatar--online');
         }
 
-        element.textContent = getInitials(name);
+        applyAvatarContent(element, avatarUrl);
+    };
+
+    var initializeAccountAvatar = function () {
+        if (accountAvatar) {
+            applyAvatarContent(
+                    accountAvatar,
+                    accountAvatar.getAttribute('data-avatar-url')
+            );
+        }
     };
 
     var formatTime = function (value) {
@@ -376,8 +407,8 @@
                 contactStatusDot.hidden = true;
             }
 
-            updateAvatar(contactAvatar, '--', null, false);
-            updateAvatar(introAvatar, '--', 'avatar--large', false);
+            updateAvatar(contactAvatar, '--', null, false, null);
+            updateAvatar(introAvatar, '--', 'avatar--large', false, null);
 
             if (introLabel) {
                 introLabel.textContent = 'Your conversations';
@@ -416,8 +447,14 @@
             contactStatusDot.hidden = false;
         }
 
-        updateAvatar(contactAvatar, room.name, null, true);
-        updateAvatar(introAvatar, room.name, 'avatar--large', true);
+        updateAvatar(contactAvatar, room.name, null, true, room.avatarUrl);
+        updateAvatar(
+                introAvatar,
+                room.name,
+                'avatar--large',
+                true,
+                room.avatarUrl
+        );
 
         if (introLabel) {
             introLabel.textContent = 'Your conversation';
@@ -454,7 +491,7 @@
         item.dataset.category = 'inbox';
         item.dataset.name = room.name || '';
 
-        item.appendChild(createAvatar(room.name, null, true));
+        item.appendChild(createAvatar(room.name, null, true, room.avatarUrl));
 
         var itemBody = document.createElement('span');
         itemBody.className = 'conversation-item__body';
@@ -514,7 +551,8 @@
             row.appendChild(createAvatar(
                     message.senderUsername,
                     'avatar--small',
-                    false
+                    false,
+                    message.senderAvatarUrl
             ));
         }
 
@@ -963,6 +1001,7 @@
         }
     });
 
+    initializeAccountAvatar();
     setComposerEnabled(false);
     updateRoomDetails(null);
     loadRooms();
