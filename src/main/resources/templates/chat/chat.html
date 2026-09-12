@@ -76,6 +76,20 @@
                     <p><span class="status-dot" data-contact-status-dot></span><span data-contact-status>Not connected</span></p>
                 </div>
             </div>
+            <div class="account-menu" aria-label="Account menu">
+                <span class="account-avatar" aria-hidden="true" th:text="${#strings.toUpperCase(#strings.substring(currentUsername, 0, 1))}">U</span>
+                <span class="account-name" th:text="${currentUsername}">Username</span>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button class="logout-button" type="submit" aria-label="Sign out" title="Sign out">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M10 5H6.75C5.7835 5 5 5.7835 5 6.75V17.25C5 18.2165 5.7835 19 6.75 19H10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                            <path d="M13 8L17 12L13 16M9 12H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Sign out</span>
+                    </button>
+                </form>
+            </div>
         </header>
 
         <section class="chat-scroll" aria-label="Chat" data-chat-scroll>

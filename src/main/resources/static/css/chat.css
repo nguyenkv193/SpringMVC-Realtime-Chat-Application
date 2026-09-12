@@ -726,6 +726,71 @@ kbd {
     font-size: 10px;
 }
 
+.account-menu {
+    display: flex;
+    align-items: center;
+    margin-left: 18px;
+    padding-left: 16px;
+    gap: 9px;
+    border-left: 1px solid var(--chat-line);
+}
+
+.account-avatar {
+    display: inline-grid;
+    width: 31px;
+    height: 31px;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    color: #7a513e;
+    background: var(--chat-sun);
+    font-size: 11px;
+    font-weight: 800;
+    place-items: center;
+}
+
+.account-name {
+    max-width: 116px;
+    overflow: hidden;
+    color: var(--chat-ink-soft);
+    font-size: 11px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.logout-form {
+    display: flex;
+    margin: 0;
+}
+
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 31px;
+    padding: 0 9px;
+    gap: 6px;
+    border: 1px solid var(--chat-line);
+    border-radius: 9px;
+    color: var(--chat-muted);
+    background: #fff;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+.logout-button:hover,
+.logout-button:focus-visible {
+    border-color: rgba(242, 103, 82, 0.45);
+    color: var(--chat-accent-deep);
+    background: var(--chat-accent-soft);
+}
+
+.logout-button svg {
+    width: 15px;
+    height: 15px;
+}
+
 .status-dot {
     display: inline-block;
     width: 6px;
@@ -1760,6 +1825,26 @@ kbd {
 
     .conversation-contact h1 {
         font-size: 14px;
+    }
+
+    .account-menu {
+        margin-left: 8px;
+        padding-left: 8px;
+        gap: 6px;
+    }
+
+    .account-name {
+        display: none;
+    }
+
+    .logout-button {
+        width: 31px;
+        padding: 0;
+        justify-content: center;
+    }
+
+    .logout-button span {
+        display: none;
     }
 
     .conversation-header__actions > .icon-button:nth-child(1),
