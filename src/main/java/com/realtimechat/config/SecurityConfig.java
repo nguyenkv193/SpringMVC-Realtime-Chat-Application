@@ -1,5 +1,6 @@
 package com.realtimechat.config;
 
+import com.realtimechat.auth.LoginAuthenticationFailureHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity httpSecurity,
-            AuthenticationProvider authenticationProvider
+            AuthenticationProvider authenticationProvider,
+            LoginAuthenticationFailureHandler loginAuthenticationFailureHandler
     ) throws Exception {
         httpSecurity
                 .authenticationProvider(authenticationProvider)
@@ -29,7 +31,7 @@ public class SecurityConfig {
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/chat", true)
-                                .failureUrl("/login?error=true")
+                                .failureHandler(loginAuthenticationFailureHandler)
                                 .usernameParameter("email")
                                 .passwordParameter("password")
                                 .permitAll()
