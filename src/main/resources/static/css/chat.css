@@ -82,16 +82,16 @@ a {
 .chat-app {
     position: relative;
     display: grid;
-    width: min(1120px, 100%);
-    height: min(700px, calc(100vh - 56px));
-    min-height: 560px;
+    width: min(1020px, 100%);
+    height: min(640px, calc(100vh - 56px));
+    min-height: 520px;
     margin: 0 auto;
     overflow: hidden;
     border: 1px solid rgba(232, 228, 220, 0.95);
     border-radius: var(--chat-radius-xl);
     background: var(--chat-paper);
     box-shadow: var(--chat-shadow);
-    grid-template-columns: 250px minmax(0, 1fr) 240px;
+    grid-template-columns: 225px minmax(0, 1fr) 215px;
     isolation: isolate;
 }
 
@@ -1638,7 +1638,7 @@ kbd {
 
 @media (max-width: 1190px) {
     .chat-app {
-        grid-template-columns: 260px minmax(0, 1fr) 250px;
+        grid-template-columns: 220px minmax(0, 1fr) 210px;
     }
 
     .chat-sidebar {

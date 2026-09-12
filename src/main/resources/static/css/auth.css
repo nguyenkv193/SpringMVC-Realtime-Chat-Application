@@ -30,9 +30,7 @@ body {
     min-height: 100vh;
     margin: 0;
     color: var(--ink);
-    background:
-        radial-gradient(circle at 12% 12%, rgba(242, 103, 82, 0.08), transparent 25rem),
-        var(--canvas);
+    background: linear-gradient(to bottom, #f6e9e2 0%, #f8f5ef 49%, #e2f1e9 100%);
     font-family: 'DM Sans', 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
 }
@@ -60,8 +58,8 @@ a {
 
 .auth-shell {
     display: grid;
-    width: min(880px, 100%);
-    min-height: 560px;
+    width: min(760px, 100%);
+    min-height: 500px;
     overflow: hidden;
     border: 1px solid rgba(231, 228, 220, 0.85);
     border-radius: var(--radius-xl);
@@ -73,9 +71,9 @@ a {
 .auth-showcase {
     position: relative;
     display: flex;
-    min-height: 560px;
+    min-height: 500px;
     overflow: hidden;
-    padding: 24px 28px 18px;
+    padding: 20px 22px 16px;
     color: #fffaf2;
     background: var(--accent);
     isolation: isolate;
@@ -151,7 +149,7 @@ a {
 
 .showcase-copy {
     width: min(360px, 100%);
-    margin-top: 44px;
+    margin-top: 32px;
 }
 
 .eyebrow {
@@ -173,7 +171,7 @@ a {
     margin: 0;
     color: #fffaf2;
     font-family: 'Space Grotesk', 'DM Sans', sans-serif;
-    font-size: clamp(31px, 3.2vw, 42px);
+    font-size: clamp(28px, 3.2vw, 36px);
     font-weight: 600;
     letter-spacing: -0.07em;
     line-height: 0.99;
@@ -181,9 +179,9 @@ a {
 
 .showcase-copy p:last-child {
     max-width: 280px;
-    margin: 22px 0 0;
+    margin: 17px 0 0;
     color: rgba(255, 250, 242, 0.78);
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.65;
 }
 
@@ -413,8 +411,8 @@ a {
 }
 
 .auth-content {
-    width: min(320px, calc(100% - 44px));
-    padding: 30px 0;
+    width: min(285px, calc(100% - 36px));
+    padding: 24px 0;
 }
 
 .auth-heading {
