@@ -10,25 +10,23 @@
     var mainPanel = document.querySelector('.conversation-panel');
     var conversationList = document.querySelector('[data-conversation-list]');
     var conversationEmpty = document.querySelector('[data-conversation-empty]');
-    var conversationCount = document.querySelector('.count-badge');
     var searchInput = document.querySelector('[data-search]');
     var chatScroll = document.querySelector('[data-chat-scroll]');
     var messageThread = document.querySelector('[data-message-thread]');
-    var dateDivider = document.querySelector('[data-date-divider]');
+    var chatIntro = document.querySelector('[data-chat-intro]');
     var composer = document.querySelector('[data-composer]');
     var messageInput = document.querySelector('[data-message-input]');
     var sendButton = document.querySelector('.send-button');
     var liveRegion = document.querySelector('[data-live-region]');
     var modal = document.querySelector('[data-new-chat-modal]');
     var modalInput = document.querySelector('#new-chat-person');
-    var roomOnlyElements = document.querySelectorAll('[data-room-only]');
 
     var rooms = [];
     var currentRoom = null;
     var currentRoomId = null;
     var roomSubscription = null;
     var stompClient = null;
-    var activeFilter = 'inbox';
+    var activeFilter = 'all';
     var csrfTokenElement = document.querySelector('meta[name="_csrf"]');
     var csrfHeaderElement = document.querySelector('meta[name="_csrf_header"]');
     var currentUsername = body.dataset.currentUsername || '';
@@ -230,7 +228,8 @@
 
     var setComposerEnabled = function (enabled) {
         if (messageInput) {
-            messageInput.disabled = !enabled;
+            messageInput.readOnly = !enabled;
+            messageInput.setAttribute('aria-disabled', String(!enabled));
             messageInput.placeholder = enabled
                     ? 'Write a message...'
                     : 'Select a conversation first';
@@ -240,9 +239,6 @@
             sendButton.disabled = !enabled;
         }
 
-        document.querySelectorAll('.composer-tool').forEach(function (tool) {
-            tool.disabled = !enabled;
-        });
     };
 
     var updateRoomDetails = function (room) {
@@ -250,9 +246,6 @@
         var contactStatus = document.querySelector('[data-contact-status]');
         var contactStatusDot = document.querySelector('[data-contact-status-dot]');
         var contactAvatar = document.querySelector('[data-contact-avatar]');
-        var detailsName = document.querySelector('[data-details-name]');
-        var detailsMeta = document.querySelector('[data-details-meta]');
-        var detailsAvatar = document.querySelector('[data-details-avatar]');
         var introAvatar = document.querySelector('[data-chat-intro-avatar]');
         var introLabel = document.querySelector('[data-chat-intro-label]');
         var introTitle = document.querySelector('[data-chat-intro-title]');
@@ -276,16 +269,7 @@
             }
 
             updateAvatar(contactAvatar, '--', null, false);
-            updateAvatar(detailsAvatar, '--', 'avatar--xl', false);
             updateAvatar(introAvatar, '--', 'avatar--large', false);
-
-            if (detailsName) {
-                detailsName.textContent = 'No conversation selected';
-            }
-
-            if (detailsMeta) {
-                detailsMeta.textContent = 'Choose a conversation to see details.';
-            }
 
             if (introLabel) {
                 introLabel.textContent = 'Your conversations';
@@ -300,13 +284,9 @@
                         'Start a new conversation or select one from your inbox.';
             }
 
-            if (dateDivider) {
-                dateDivider.hidden = true;
+            if (chatIntro) {
+                chatIntro.hidden = false;
             }
-
-            roomOnlyElements.forEach(function (element) {
-                element.hidden = true;
-            });
 
             setComposerEnabled(false);
             return;
@@ -329,18 +309,7 @@
         }
 
         updateAvatar(contactAvatar, room.name, null, true);
-        updateAvatar(detailsAvatar, room.name, 'avatar--xl', true);
         updateAvatar(introAvatar, room.name, 'avatar--large', true);
-
-        if (detailsName) {
-            detailsName.textContent = room.name;
-        }
-
-        if (detailsMeta) {
-            detailsMeta.textContent = room.roomType === 'GROUP'
-                    ? 'Group conversation'
-                    : '@' + room.name;
-        }
 
         if (introLabel) {
             introLabel.textContent = 'Your conversation';
@@ -355,13 +324,9 @@
                     'A private conversation with ' + room.name + '.';
         }
 
-        if (dateDivider) {
-            dateDivider.hidden = false;
+        if (chatIntro) {
+            chatIntro.hidden = true;
         }
-
-        roomOnlyElements.forEach(function (element) {
-            element.hidden = false;
-        });
 
         setComposerEnabled(true);
     };
@@ -424,10 +389,6 @@
         rooms.forEach(function (room) {
             conversationList.appendChild(createConversationItem(room));
         });
-
-        if (conversationCount) {
-            conversationCount.textContent = String(rooms.length);
-        }
 
         applyConversationFilter();
     };
@@ -656,30 +617,6 @@
         }
     };
 
-    var toggleDetails = function () {
-        var isCollapsed = app.classList.toggle('details-collapsed');
-
-        document.querySelectorAll('[data-action="toggle-details"]').forEach(function (control) {
-            control.setAttribute('aria-expanded', String(!isCollapsed));
-        });
-
-        announce(isCollapsed
-                ? 'Conversation details hidden.'
-                : 'Conversation details shown.');
-    };
-
-    var toggleSection = function (button) {
-        var section = button.closest('.details-section');
-
-        if (!section) {
-            return;
-        }
-
-        var isExpanded = button.getAttribute('aria-expanded') !== 'false';
-        button.setAttribute('aria-expanded', String(!isExpanded));
-        section.classList.toggle('is-collapsed', isExpanded);
-    };
-
     var openModal = function () {
         if (!modal) {
             return;
@@ -748,25 +685,6 @@
         searchInput.addEventListener('input', applyConversationFilter);
     }
 
-    document.querySelectorAll('[data-filter]').forEach(function (button) {
-        button.addEventListener('click', function () {
-            activeFilter = button.getAttribute('data-filter') || 'inbox';
-
-            document.querySelectorAll('[data-filter]').forEach(function (navItem) {
-                var isActive = navItem === button;
-                navItem.classList.toggle('is-active', isActive);
-
-                if (isActive) {
-                    navItem.setAttribute('aria-current', 'page');
-                } else {
-                    navItem.removeAttribute('aria-current');
-                }
-            });
-
-            applyConversationFilter();
-        });
-    });
-
     document.querySelectorAll('[data-action]').forEach(function (control) {
         control.addEventListener('click', function () {
             var action = control.getAttribute('data-action');
@@ -775,10 +693,6 @@
                 toggleSidebar();
             } else if (action === 'close-sidebar') {
                 closeSidebar();
-            } else if (action === 'toggle-details') {
-                toggleDetails();
-            } else if (action === 'toggle-section') {
-                toggleSection(control);
             } else if (action === 'new-chat') {
                 openModal();
             } else if (action === 'close-new-chat') {
@@ -812,6 +726,12 @@
 
     if (messageInput) {
         messageInput.addEventListener('input', resizeMessageInput);
+        messageInput.addEventListener('click', function () {
+            if (!currentRoomId) {
+                messageInput.blur();
+                openModal();
+            }
+        });
         messageInput.addEventListener('keydown', function (event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();

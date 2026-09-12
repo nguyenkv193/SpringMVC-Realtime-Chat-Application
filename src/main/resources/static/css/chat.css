@@ -37,7 +37,7 @@ body {
     margin: 0;
     color: var(--chat-ink);
     background: linear-gradient(to bottom, #f6e9e2 0%, #f8f5ef 49%, #e2f1e9 100%);
-    font-family: 'DM Sans', 'Segoe UI', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -91,7 +91,7 @@ a {
     border-radius: var(--chat-radius-xl);
     background: var(--chat-paper);
     box-shadow: var(--chat-shadow);
-    grid-template-columns: 225px minmax(0, 1fr) 215px;
+    grid-template-columns: 225px minmax(0, 1fr);
     isolation: isolate;
 }
 
@@ -136,7 +136,7 @@ a {
     width: fit-content;
     gap: 8px;
     color: var(--chat-ink);
-    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 23px;
     font-weight: 700;
     letter-spacing: -0.07em;
@@ -185,7 +185,7 @@ a {
     border-radius: 10px;
     color: #7a513e;
     background: var(--chat-sun);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 13px;
     font-weight: 700;
     place-items: center;
@@ -450,6 +450,7 @@ kbd {
 }
 
 .conversation-list {
+    flex: 1 1 auto;
     min-height: 0;
     overflow: auto;
     padding: 0 1px 9px;
@@ -506,7 +507,7 @@ kbd {
     flex: 0 0 auto;
     border-radius: 12px;
     color: #28424b;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -709,7 +710,7 @@ kbd {
 .conversation-contact h1 {
     margin: 0;
     color: var(--chat-ink);
-    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 15px;
     font-weight: 600;
     letter-spacing: -0.045em;
@@ -786,7 +787,7 @@ kbd {
 .chat-intro h2 {
     margin: 0;
     color: var(--chat-ink);
-    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: clamp(20px, 2.2vw, 27px);
     font-weight: 600;
     letter-spacing: -0.065em;
@@ -1037,7 +1038,7 @@ kbd {
 
 .composer-tool--emoji {
     margin-left: auto;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 21px;
     line-height: 1;
 }
@@ -1062,6 +1063,10 @@ kbd {
 
 .composer-box textarea:focus {
     outline: 0;
+}
+
+.composer-box textarea[readonly] {
+    cursor: pointer;
 }
 
 .send-button {
@@ -1143,6 +1148,10 @@ kbd {
     grid-template-columns: 225px minmax(0, 1fr);
 }
 
+.details-panel[hidden] {
+    display: none;
+}
+
 .chat-app.details-collapsed .details-panel {
     display: none;
 }
@@ -1153,7 +1162,7 @@ kbd {
     padding: 0 19px 0 23px;
     border-bottom: 1px solid var(--chat-line);
     color: var(--chat-ink);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: -0.035em;
@@ -1182,7 +1191,7 @@ kbd {
 .details-profile h2 {
     margin: 13px 0 0;
     color: var(--chat-ink);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 16px;
     font-weight: 600;
     letter-spacing: -0.05em;
@@ -1375,7 +1384,7 @@ kbd {
     top: 46%;
     left: 27%;
     color: #c58068;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 8px;
     font-style: normal;
     transform: rotate(-8deg);
@@ -1391,7 +1400,7 @@ kbd {
     top: 36%;
     width: 100%;
     color: currentColor;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 18px;
     font-style: normal;
     line-height: 1;
@@ -1537,7 +1546,7 @@ kbd {
 .modal-card h2 {
     margin: 14px 0 0;
     color: var(--chat-ink);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 24px;
     font-weight: 600;
     letter-spacing: -0.065em;
@@ -1639,7 +1648,7 @@ kbd {
 
 @media (max-width: 1190px) {
     .chat-app {
-        grid-template-columns: 220px minmax(0, 1fr) 210px;
+        grid-template-columns: 220px minmax(0, 1fr);
     }
 
     .chat-sidebar {
