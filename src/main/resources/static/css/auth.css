@@ -30,10 +30,8 @@ body {
     min-height: 100vh;
     margin: 0;
     color: var(--ink);
-    background:
-        radial-gradient(circle at 12% 12%, rgba(242, 103, 82, 0.08), transparent 25rem),
-        var(--canvas);
-    font-family: 'DM Sans', 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #f6e9e2 0%, #f8f5ef 49%, #e2f1e9 100%);
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -54,14 +52,15 @@ a {
 .auth-page {
     display: grid;
     min-height: 100vh;
-    padding: 18px;
+    padding: 28px;
     place-items: center;
 }
 
 .auth-shell {
     display: grid;
-    width: min(880px, 100%);
-    min-height: 560px;
+    width: min(1020px, 100%);
+    height: min(640px, calc(100vh - 56px));
+    min-height: 520px;
     overflow: hidden;
     border: 1px solid rgba(231, 228, 220, 0.85);
     border-radius: var(--radius-xl);
@@ -73,9 +72,9 @@ a {
 .auth-showcase {
     position: relative;
     display: flex;
-    min-height: 560px;
+    min-height: 0;
     overflow: hidden;
-    padding: 24px 28px 18px;
+    padding: 20px 22px 16px;
     color: #fffaf2;
     background: var(--accent);
     isolation: isolate;
@@ -120,7 +119,7 @@ a {
     width: fit-content;
     gap: 9px;
     color: inherit;
-    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.06em;
@@ -151,7 +150,7 @@ a {
 
 .showcase-copy {
     width: min(360px, 100%);
-    margin-top: 44px;
+    margin-top: 32px;
 }
 
 .eyebrow {
@@ -172,8 +171,8 @@ a {
     max-width: 370px;
     margin: 0;
     color: #fffaf2;
-    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
-    font-size: clamp(31px, 3.2vw, 42px);
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
+    font-size: clamp(28px, 3.2vw, 36px);
     font-weight: 600;
     letter-spacing: -0.07em;
     line-height: 0.99;
@@ -181,9 +180,9 @@ a {
 
 .showcase-copy p:last-child {
     max-width: 280px;
-    margin: 22px 0 0;
+    margin: 17px 0 0;
     color: rgba(255, 250, 242, 0.78);
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.65;
 }
 
@@ -413,8 +412,8 @@ a {
 }
 
 .auth-content {
-    width: min(320px, calc(100% - 44px));
-    padding: 30px 0;
+    width: min(285px, calc(100% - 36px));
+    padding: 24px 0;
 }
 
 .auth-heading {
@@ -458,7 +457,7 @@ a {
 .auth-heading h2 {
     margin: 0;
     color: var(--ink);
-    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: clamp(28px, 3vw, 33px);
     font-weight: 600;
     letter-spacing: -0.065em;
@@ -512,7 +511,7 @@ a {
     color: #fffaf2;
     background: var(--ink);
     box-shadow: 0 14px 30px rgba(23, 33, 43, 0.24), 0 3px 10px rgba(23, 33, 43, 0.1);
-    font-family: 'DM Sans', 'Segoe UI', sans-serif;
+    font-family: 'Manrope', 'Segoe UI', sans-serif;
     font-size: 12px;
     line-height: 1.35;
     white-space: normal;
@@ -986,6 +985,7 @@ a {
     .auth-shell {
         display: block;
         width: 100%;
+        height: auto;
         min-height: 100vh;
         border: 0;
         border-radius: 0;
