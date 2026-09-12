@@ -1,5 +1,10 @@
 package com.realtimechat.user.service.impl;
 
+import com.realtimechat.common.exception.InvalidPasswordException;
+import com.realtimechat.common.exception.PasswordMismatchException;
+import com.realtimechat.common.exception.ResourceAlreadyExistsException;
+import com.realtimechat.common.exception.ResourceNotFoundException;
+import com.realtimechat.common.exception.RoleNotFoundException;
 import com.realtimechat.user.dto.request.ChangePasswordRequest;
 import com.realtimechat.user.dto.request.CreateUserRequest;
 import com.realtimechat.user.dto.request.UpdateUserRequest;
@@ -26,18 +31,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse register(CreateUserRequest createUserRequest) {
         if(userRepository.existsByUsername(createUserRequest.getUsername())) {
-            throw new IllegalArgumentException("Username đã tồn tại");
+            throw new ResourceAlreadyExistsException("Username đã tồn tại");
         }
 
         if(userRepository.existsByEmail(createUserRequest.getEmail())) {
-            throw new IllegalArgumentException("Email đã tồn tại");
+            throw new ResourceAlreadyExistsException("Email đã tồn tại");
         }
 
         User user = UserMapper.toUser(createUserRequest);
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
 
         Role defaultRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new IllegalStateException("Role USER chưa được khởi tạo"));
+                .orElseThrow(() -> new RoleNotFoundException("USER"));
         user.getRoles().add(defaultRole);
 
         return UserMapper.toUserResponse(userRepository.save(user));
@@ -55,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
         if(request.getUsername() != null && !request.getUsername().equals(username)) {
             if (userRepository.existsByUsername(request.getUsername())) {
-                throw new IllegalArgumentException("Username đã tồn tại");
+                throw new ResourceAlreadyExistsException("Username đã tồn tại");
             }
 
             user.setUsername(username);
@@ -69,11 +74,11 @@ public class UserServiceImpl implements UserService {
         User user = findUserByUsername(username);
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Mật khẩu hiện tại không đúng");
+            throw new InvalidPasswordException("Mật khẩu hiện tại không đúng");
         }
 
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalArgumentException("Mật khẩu xác nhận không khớp");
+            throw new PasswordMismatchException("Mật khẩu xác nhận không khớp");
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -83,6 +88,6 @@ public class UserServiceImpl implements UserService {
     private User findUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Không tìm thấy người dùng"));
+                        new ResourceNotFoundException("Không tìm thấy người dùng: " + username));
     }
 }

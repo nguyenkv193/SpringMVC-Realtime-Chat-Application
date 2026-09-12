@@ -1,5 +1,6 @@
 package com.realtimechat.auth;
 
+import com.realtimechat.common.exception.ResourceAlreadyExistsException;
 import com.realtimechat.user.dto.request.CreateUserRequest;
 import com.realtimechat.user.service.UserService;
 import jakarta.validation.Valid;
@@ -37,7 +38,7 @@ public class RegistrationController {
         try {
             userService.register(request);
             return "redirect:/login?registered=true";
-        } catch (IllegalArgumentException exception) {
+        } catch (ResourceAlreadyExistsException exception) {
             bindingResult.reject("register", exception.getMessage());
             return "auth/register";
         }

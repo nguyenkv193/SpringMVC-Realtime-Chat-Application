@@ -1,5 +1,8 @@
 package com.realtimechat.user.controller;
 
+import com.realtimechat.common.exception.InvalidPasswordException;
+import com.realtimechat.common.exception.PasswordMismatchException;
+import com.realtimechat.common.exception.ResourceAlreadyExistsException;
 import com.realtimechat.user.dto.request.ChangePasswordRequest;
 import com.realtimechat.user.dto.request.UpdateUserRequest;
 import com.realtimechat.user.dto.response.UserResponse;
@@ -64,7 +67,7 @@ public class ProfileController {
             }
 
             return "redirect:/profile?updated=true";
-        } catch (IllegalArgumentException exception) {
+        } catch (ResourceAlreadyExistsException exception) {
             bindingResult.reject("updateProfile", exception.getMessage());
             model.addAttribute("user", userService.getCurrentUser(authentication.getName()));
             return "user/profile";
@@ -89,7 +92,7 @@ public class ProfileController {
         try {
             userService.changePassword(authentication.getName(), request);
             return "redirect:/profile?passwordChanged=true";
-        } catch (IllegalArgumentException exception) {
+        } catch (InvalidPasswordException | PasswordMismatchException exception) {
             bindingResult.reject("changePassword", exception.getMessage());
             return "user/change-password";
         }
