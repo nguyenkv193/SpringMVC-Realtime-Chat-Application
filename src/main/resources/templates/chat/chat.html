@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f4f1eb">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>Chat | Moji</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/chat.css}">
 </head>
-<body class="chat-page">
+<body class="chat-page" th:attr="data-current-username=${currentUsername}">
 <div class="chat-app" data-chat-app>
     <div class="sidebar-backdrop" data-action="close-sidebar" aria-hidden="true"></div>
 
@@ -104,50 +106,7 @@
             </button>
         </div>
 
-        <div class="conversation-list" data-conversation-list role="listbox" aria-label="Recent conversations">
-            <button class="conversation-item is-active" type="button" role="option" aria-selected="true" data-conversation data-category="inbox starred" data-name="Linh Trần">
-                <span class="avatar avatar--coral avatar--online">LT</span>
-                <span class="conversation-item__body">
-                    <span class="conversation-item__topline"><strong>Linh Trần</strong><time>10:42 AM</time></span>
-                    <span class="conversation-item__bottomline"><span>That sounds perfect — see you then ✨</span><b>2</b></span>
-                </span>
-            </button>
-            <button class="conversation-item" type="button" role="option" aria-selected="false" data-conversation data-category="inbox" data-name="An Nguyễn">
-                <span class="avatar avatar--mint avatar--online">AN</span>
-                <span class="conversation-item__body">
-                    <span class="conversation-item__topline"><strong>An Nguyễn</strong><time>09:18 AM</time></span>
-                    <span class="conversation-item__bottomline"><span>Can you send me the notes?</span></span>
-                </span>
-            </button>
-            <button class="conversation-item" type="button" role="option" aria-selected="false" data-conversation data-category="inbox starred" data-name="Minh Phạm">
-                <span class="avatar avatar--navy">MP</span>
-                <span class="conversation-item__body">
-                    <span class="conversation-item__topline"><strong>Minh Phạm</strong><time>Yesterday</time></span>
-                    <span class="conversation-item__bottomline"><span>Let’s make it a quiet one.</span><i class="unread-dot" aria-label="Unread"></i></span>
-                </span>
-            </button>
-            <button class="conversation-item" type="button" role="option" aria-selected="false" data-conversation data-category="inbox" data-name="Thảo Lê">
-                <span class="avatar avatar--yellow">TL</span>
-                <span class="conversation-item__body">
-                    <span class="conversation-item__topline"><strong>Thảo Lê</strong><time>Yesterday</time></span>
-                    <span class="conversation-item__bottomline"><span>Photo · Weekend market</span></span>
-                </span>
-            </button>
-            <button class="conversation-item" type="button" role="option" aria-selected="false" data-conversation data-category="inbox" data-name="Design circle">
-                <span class="avatar avatar--lavender avatar--group">DC</span>
-                <span class="conversation-item__body">
-                    <span class="conversation-item__topline"><strong>Design circle</strong><time>Mon</time></span>
-                    <span class="conversation-item__bottomline"><span><b>Mai:</b> New moodboard is up</span><b>8</b></span>
-                </span>
-            </button>
-            <button class="conversation-item" type="button" role="option" aria-selected="false" data-conversation data-category="archived" data-name="Quân Võ">
-                <span class="avatar avatar--blue">QV</span>
-                <span class="conversation-item__body">
-                    <span class="conversation-item__topline"><strong>Quân Võ</strong><time>Mar 08</time></span>
-                    <span class="conversation-item__bottomline"><span>Thanks for your help!</span></span>
-                </span>
-            </button>
-        </div>
+        <div class="conversation-list" data-conversation-list role="listbox" aria-label="Recent conversations"></div>
         <p class="conversation-empty" data-conversation-empty hidden>No conversations found.</p>
 
         <div class="sidebar-footer">
@@ -163,7 +122,7 @@
         </div>
     </aside>
 
-    <main class="conversation-panel">
+    <main class="conversation-panel" data-current-room-id="">
         <header class="conversation-header">
             <button class="icon-button mobile-menu" type="button" data-action="toggle-sidebar" aria-label="Open conversations" aria-controls="chat-sidebar" aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -171,10 +130,10 @@
                 </svg>
             </button>
             <div class="conversation-contact">
-                <span class="avatar avatar--coral avatar--online" data-contact-avatar>LT</span>
+                <span class="avatar avatar--coral" data-contact-avatar>--</span>
                 <div>
-                    <h1 data-contact-name>Linh Trần</h1>
-                    <p><span class="status-dot"></span><span data-contact-status>Online now</span></p>
+                    <h1 data-contact-name>Select a conversation</h1>
+                    <p><span class="status-dot" data-contact-status-dot></span><span data-contact-status>Not connected</span></p>
                 </div>
             </div>
             <div class="conversation-header__actions">
@@ -206,54 +165,17 @@
             </div>
         </header>
 
-        <section class="chat-scroll" aria-label="Chat with Linh Trần" data-chat-scroll>
-            <div class="chat-intro">
-                <span class="avatar avatar--coral avatar--large avatar--online">LT</span>
-                <p class="eyebrow eyebrow--dark">Your conversation</p>
-                <h2>Nice to see you again.</h2>
-                <p>Linh is in your contacts · You started chatting in February 2024</p>
+        <section class="chat-scroll" aria-label="Chat" data-chat-scroll>
+            <div class="chat-intro" data-chat-intro>
+                <span class="avatar avatar--coral avatar--large" data-chat-intro-avatar>--</span>
+                <p class="eyebrow eyebrow--dark" data-chat-intro-label>Your conversations</p>
+                <h2 data-chat-intro-title>Choose a conversation.</h2>
+                <p data-chat-intro-description>Start a new conversation or select one from your inbox.</p>
             </div>
 
-            <div class="date-divider"><span>Tuesday, 12 March</span></div>
+            <div class="date-divider" data-date-divider hidden><span>Conversation history</span></div>
 
-            <ol class="message-thread" aria-label="Messages">
-                <li class="message-row message-row--incoming">
-                    <span class="avatar avatar--coral avatar--small">LT</span>
-                    <div class="message-stack">
-                        <div class="message-author-line"><strong>Linh Trần</strong><time>10:11 AM</time></div>
-                        <div class="message-bubble message-bubble--incoming">Hey Minh! How did the little presentation go?</div>
-                        <div class="message-bubble message-bubble--incoming">I’ve been thinking about that quiet coffee place you mentioned ☕</div>
-                    </div>
-                </li>
-                <li class="message-row message-row--outgoing">
-                    <div class="message-stack">
-                        <div class="message-bubble message-bubble--outgoing">It went better than expected. The team loved the direction.</div>
-                        <div class="message-bubble message-bubble--outgoing">And yes, that place is still my favourite. Want to go this weekend?</div>
-                        <div class="message-author-line message-author-line--outgoing"><time>10:18 AM · Read</time></div>
-                    </div>
-                </li>
-                <li class="message-row message-row--incoming">
-                    <span class="avatar avatar--coral avatar--small">LT</span>
-                    <div class="message-stack">
-                        <div class="message-author-line"><strong>Linh Trần</strong><time>10:23 AM</time></div>
-                        <div class="message-bubble message-bubble--incoming">That sounds perfect — Saturday morning?</div>
-                        <div class="message-reaction"><span>♡</span><b>1</b></div>
-                    </div>
-                </li>
-                <li class="message-row message-row--outgoing">
-                    <div class="message-stack">
-                        <div class="message-bubble message-bubble--outgoing">Saturday works. I’ll bring the sketchbook, you bring the good stories.</div>
-                        <div class="message-author-line message-author-line--outgoing"><time>10:31 AM · Read</time></div>
-                    </div>
-                </li>
-                <li class="message-row message-row--incoming">
-                    <span class="avatar avatar--coral avatar--small">LT</span>
-                    <div class="message-stack">
-                        <div class="message-author-line"><strong>Linh Trần</strong><time>10:42 AM</time></div>
-                        <div class="message-bubble message-bubble--incoming">Deal. That sounds perfect — see you then ✨</div>
-                    </div>
-                </li>
-            </ol>
+            <ol class="message-thread" aria-label="Messages" data-message-thread></ol>
 
             <div class="typing-state" aria-live="polite" hidden data-typing-state>
                 <span class="typing-state__dots"><i></i><i></i><i></i></span>
@@ -262,28 +184,15 @@
         </section>
 
         <form class="composer" data-composer>
-            <div class="reply-preview" data-reply-preview hidden>
-                <span class="reply-preview__icon">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M7 7.5H17M7 11.5H14M5.5 19L8.5 16H18.25C19.2165 16 20 15.2165 20 14.25V6.75C20 5.7835 19.2165 5 18.25 5H5.75C4.7835 5 4 5.7835 4 6.75V17.25C4 18.2165 4.7835 19 5.75 19H5.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                    </svg>
-                </span>
-                <span>Demo mode — messages are only shown in this preview.</span>
-                <button class="icon-button icon-button--tiny" type="button" data-action="dismiss-preview" aria-label="Dismiss preview note">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M7 7L17 17M17 7L7 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
             <div class="composer-box">
                 <button class="composer-tool" type="button" aria-label="Attach a file">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M8.5 12.5L13.83 7.17C15.2 5.8 17.42 5.8 18.79 7.17C20.16 8.54 20.16 10.76 18.79 12.13L11.33 19.59C9.57 21.35 6.72 21.35 4.96 19.59C3.2 17.83 3.2 14.98 4.96 13.22L12.42 5.76C13.59 4.59 15.48 4.59 16.65 5.76" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
-                <textarea rows="1" placeholder="Write a message..." aria-label="Write a message" data-message-input></textarea>
+                <textarea rows="1" placeholder="Select a conversation first" aria-label="Write a message" data-message-input disabled></textarea>
                 <button class="composer-tool composer-tool--emoji" type="button" aria-label="Add emoji">☺</button>
-                <button class="send-button" type="submit" aria-label="Send message">
+                <button class="send-button" type="submit" aria-label="Send message" disabled>
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M20.5 4.5L11.2 13.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
                         <path d="M20.5 4.5L14.58 19.5L11.2 13.8L4.5 10.75L20.5 4.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
@@ -306,16 +215,16 @@
         </div>
         <div class="details-content">
             <div class="details-profile">
-                <span class="avatar avatar--coral avatar--xl avatar--online" data-details-avatar>LT</span>
-                <h2 data-details-name>Linh Trần</h2>
-                <p>@linh.tran · Ho Chi Minh City</p>
+                <span class="avatar avatar--coral avatar--xl" data-details-avatar>--</span>
+                <h2 data-details-name>No conversation selected</h2>
+                <p data-details-meta>Choose a conversation to see details.</p>
                 <div class="profile-actions">
                     <button type="button"><span>↗</span> Profile</button>
                     <button type="button"><span>⌕</span> Search</button>
                 </div>
             </div>
 
-            <section class="details-section">
+            <section class="details-section" data-room-only hidden>
                 <button class="details-disclosure" type="button" data-action="toggle-section" aria-expanded="true">
                     <span><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4.5" y="4.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="13.5" y="4.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="4.5" y="13.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="13.5" y="13.5" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/></svg> Shared media <em>8</em></span>
                     <svg class="chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 9.5L12 14.5L17 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -330,7 +239,7 @@
                 </div>
             </section>
 
-            <section class="details-section">
+            <section class="details-section" data-room-only hidden>
                 <button class="details-disclosure" type="button" data-action="toggle-section" aria-expanded="true">
                     <span><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.5 4.5H13.5L17.5 8.5V19.5H6.5V4.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M13.5 4.5V8.5H17.5M9 12H15M9 15H13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Shared files <em>3</em></span>
                     <svg class="chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 9.5L12 14.5L17 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -341,7 +250,7 @@
                 </div>
             </section>
 
-            <section class="details-section details-section--last">
+            <section class="details-section details-section--last" data-room-only hidden>
                 <button class="details-disclosure" type="button" data-action="toggle-section" aria-expanded="true">
                     <span><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5.5 6.5H18.5M5.5 11.5H15M5.5 16.5H11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Notes</span>
                     <svg class="chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 9.5L12 14.5L17 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -351,7 +260,7 @@
                 </div>
             </section>
 
-            <div class="details-footer"><button type="button" class="danger-action"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 7.5H17V19H7V7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 7.5H19M9 7.5V5H15V7.5M10 11V16M14 11V16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Delete conversation</button></div>
+            <div class="details-footer" data-room-only hidden><button type="button" class="danger-action"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 7.5H17V19H7V7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 7.5H19M9 7.5V5H15V7.5M10 11V16M14 11V16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Delete conversation</button></div>
         </div>
     </aside>
 </div>
@@ -362,13 +271,14 @@
         <div class="modal-card__topline"><span class="eyebrow eyebrow--dark">Start fresh</span><button class="icon-button icon-button--quiet" type="button" data-action="close-new-chat" aria-label="Close new conversation dialog"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 7L17 17M17 7L7 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
         <h2 id="new-chat-title">New conversation</h2>
         <p>Choose someone to start a new thread with.</p>
-        <label class="modal-field" for="new-chat-person">Name or email</label>
-        <input class="modal-input" id="new-chat-person" type="text" placeholder="e.g. hello@moji.app" autocomplete="off">
+        <label class="modal-field" for="new-chat-person">Username</label>
+        <input class="modal-input" id="new-chat-person" type="text" placeholder="e.g. linhtran" autocomplete="off">
         <div class="modal-actions"><button class="secondary-button" type="button" data-action="close-new-chat">Cancel</button><button class="primary-button primary-button--small" type="button" data-action="start-new-chat">Continue <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 10H15M10.5 5.5L15 10L10.5 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     </div>
 </div>
 
 <div class="sr-only" role="status" aria-live="polite" data-live-region></div>
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs/bundles/stomp.umd.min.js"></script>
 <script th:src="@{/js/chat.js}"></script>
 </body>
 </html>
