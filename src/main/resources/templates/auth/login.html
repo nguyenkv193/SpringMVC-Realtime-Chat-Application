@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.css">
     <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
 <body class="auth-page">
@@ -143,27 +144,10 @@
     </section>
 </main>
 <span id="password-help" class="sr-only">Password recovery will be available soon.</span>
-<div class="toast-stack" aria-live="assertive" aria-atomic="true">
-    <div class="auth-toast auth-toast--error" data-toast role="alert" th:if="${loginError}">
-        <span class="toast-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/>
-                <path d="M12 7.8V12.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                <circle cx="12" cy="15.8" r="1" fill="currentColor"/>
-            </svg>
-        </span>
-        <div class="toast-copy">
-            <strong>Sign in failed</strong>
-            <span>Check your email and password, then try again.</span>
-        </div>
-        <button class="toast-close" type="button" data-toast-close aria-label="Close notification">
-            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-            </svg>
-        </button>
-        <span class="toast-progress" aria-hidden="true"></span>
-    </div>
+<div class="sr-only" data-login-error role="alert" th:if="${loginError}" hidden>
+    Check your email or password and try again.
 </div>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.js"></script>
 <script th:src="@{/js/auth.js}"></script>
 </body>
 </html>

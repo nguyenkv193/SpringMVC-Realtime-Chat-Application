@@ -33,24 +33,43 @@
         confirmPassword.addEventListener('input', validatePasswords);
     }
 
-    var toast = document.querySelector('[data-toast]');
-    if (toast) {
-        var dismissToast = function () {
-            if (toast.classList.contains('is-closing')) {
-                return;
-            }
+    var loginError = document.querySelector('[data-login-error]');
+    if (loginError) {
+        if (typeof window.Toastify === 'function') {
+            var toastContent = document.createElement('div');
+            toastContent.className = 'moji-toast-content';
 
-            toast.classList.add('is-closing');
-            window.setTimeout(function () {
-                toast.remove();
-            }, 360);
-        };
+            var icon = document.createElement('span');
+            icon.className = 'moji-toast-icon';
+            icon.setAttribute('aria-hidden', 'true');
+            icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">'
+                + '<circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/>'
+                + '<path d="M12 7.8V12.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+                + '<circle cx="12" cy="15.8" r="1" fill="currentColor"/></svg>';
 
-        var closeButton = toast.querySelector('[data-toast-close]');
-        if (closeButton) {
-            closeButton.addEventListener('click', dismissToast);
+            var copy = document.createElement('span');
+            copy.className = 'moji-toast-copy';
+            copy.textContent = loginError.textContent.trim();
+
+            toastContent.append(icon, copy);
+
+            window.Toastify({
+                node: toastContent,
+                duration: 4500,
+                gravity: 'bottom',
+                position: 'right',
+                close: false,
+                stopOnFocus: true,
+                ariaLive: 'assertive',
+                className: 'moji-toast',
+                offset: {x: 20, y: 20}
+            }).showToast();
+
+            loginError.remove();
+        } else {
+            loginError.hidden = false;
+            loginError.classList.remove('sr-only');
+            loginError.classList.add('auth-alert', 'auth-alert--error');
         }
-
-        window.setTimeout(dismissToast, 5200);
     }
 })();
